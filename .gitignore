@@ -2,6 +2,7 @@ Temp/
 obj/
 Assets/ex2D/
 Assets/NGUI/
+output_Data/
 
 Library/cache
 Library/metadata

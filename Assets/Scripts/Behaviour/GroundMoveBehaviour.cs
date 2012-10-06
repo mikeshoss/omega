@@ -11,7 +11,14 @@ public class GroundMoveBehaviour : MoveBehaviour {
 	// Flags to handle states
 	private bool mAirborne = false;
 	
-	private float mFriction = 25;
+	// -1 = left
+	// 1 = right
+	private int mOrientation = 1;
+	
+	// Friction
+	private float mGroundFriction = 45;
+	private float mWindFriction = 1;
+	
 	private float mBaseJumpSpeed = 600;
 	private float mCalcJumpSpeed = 600;
 	private float mGravitySpeed = 30;
@@ -48,16 +55,17 @@ public class GroundMoveBehaviour : MoveBehaviour {
 			CheckInput ();
 			
 			CheckGrounded ();
-			
+			CheckOrientation ();
 			if (mMove)
 			{
 				if (mAirborne)
 				{	
+					ApplyWindFriction ();
 					ApplyGravity ();
 				}
 				else
 				{
-					ApplyFriction ();
+					ApplyGroundFriction ();
 				}
 				Move ();
 			}
@@ -151,9 +159,9 @@ public class GroundMoveBehaviour : MoveBehaviour {
 			mCurrentAirJump = 0;
 		}
 		// If head hits the top of a terrain, bounce back down
-		if (hit.gameObject.tag == "Ground" && cc.collisionFlags == CollisionFlags.Above)
+		if (hit.gameObject.tag == "Ground" && cc.collisionFlags == CollisionFlags.CollidedAbove)
 		{
-			mMoveVelocity.y = -100;	
+			mMoveVelocity.y = 0f;	
 		}
 		if (hit.gameObject.tag == "Fireball")
 		{
@@ -171,12 +179,12 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		mJump = false;	
 	}
 	
-	private void ApplyFriction ()
+	private void ApplyGroundFriction ()
 	{
 		// If moving right
 		if (mMoveVelocity.x > 0)
 		{
-			mMoveVelocity.x -= mFriction;
+			mMoveVelocity.x -= mGroundFriction;
 			
 			// If friction depletes velocity
 			if (mMoveVelocity.x < 0)
@@ -187,7 +195,33 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		// If moving left
 		if (mMoveVelocity.x < 0)
 		{
-			mMoveVelocity.x += mFriction;
+			mMoveVelocity.x += mGroundFriction;
+			
+			// If friction depletes velocity
+			if (mMoveVelocity.x > 0)
+			{
+				mMoveVelocity.x = 0;	
+			}
+		}
+	}
+	
+	private void ApplyWindFriction ()
+	{
+		// If moving right
+		if (mMoveVelocity.x > 0)
+		{
+			mMoveVelocity.x -= mWindFriction;
+			
+			// If friction depletes velocity
+			if (mMoveVelocity.x < 0)
+			{
+				mMoveVelocity.x = 0;	
+			}
+		}
+		// If moving left
+		if (mMoveVelocity.x < 0)
+		{
+			mMoveVelocity.x += mWindFriction;
 			
 			// If friction depletes velocity
 			if (mMoveVelocity.x > 0)
@@ -212,14 +246,14 @@ public class GroundMoveBehaviour : MoveBehaviour {
 
 		Vector3 pos = mOrigin.transform.position;
 		
-		pos.y -= (height / 2);
+		pos.y -= (height / 2) * mOrigin.transform.localScale.y;
 		pos.x -= cc.radius;
 		
 		RaycastHit hit2;
 
 		Vector3 pos2 = mOrigin.transform.position;
 		
-		pos2.y -= (height / 2);
+		pos2.y -= (height / 2) * mOrigin.transform.localScale.y;
 		pos2.x += cc.radius;
 		
         mAirborne = (!Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 1) && !Physics.Raycast(pos, down, out hit, mMoveVelocity.y * Time.deltaTime + 1));
@@ -227,6 +261,27 @@ public class GroundMoveBehaviour : MoveBehaviour {
 
 		Debug.DrawRay(pos, mMoveVelocity * Time.deltaTime, Color.red);
 		Debug.DrawRay(pos2, mMoveVelocity * Time.deltaTime, Color.red);
+	}
+	
+	private void CheckOrientation ()
+	{
+		if (mMoveVelocity.x > 0)
+		{
+			mOrientation = 1;
+			
+			
+			Vector3 localScale = mOrigin.transform.localScale;
+			localScale.x = Mathf.Abs(mOrigin.transform.localScale.x);
+			mOrigin.transform.localScale = localScale;
+		}
+		if (mMoveVelocity.x < 0)
+		{
+			mOrientation = -1;
+			
+			Vector3 localScale = mOrigin.transform.localScale;
+			localScale.x = -Mathf.Abs(mOrigin.transform.localScale.x);
+			mOrigin.transform.localScale = localScale;
+		}
 	}
 }
 
