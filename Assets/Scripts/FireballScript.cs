@@ -13,9 +13,6 @@ public class FireballScript : SkillScript {
 		
 		Vector3 originLocation = origin.transform.position;
 		
-		if (origin.GetOrientation() == "left")		
-			direction = -1;	
-		
 		originLocation.x += direction * 150;
 		transform.position = originLocation;
 		origin.GetComponent<exSprite>();
