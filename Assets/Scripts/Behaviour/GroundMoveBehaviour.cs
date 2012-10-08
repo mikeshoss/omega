@@ -6,14 +6,9 @@ public class GroundMoveBehaviour : MoveBehaviour {
 	
 	// Flags used to toggle functionality
 	private bool mJump = true;
-	private bool mGravity = true;
 	
 	// Flags to handle states
 	private bool mAirborne = false;
-	
-	// -1 = left
-	// 1 = right
-	private int mOrientation = 1;
 	
 	// Friction
 	private float mGroundFriction = 45;
@@ -21,7 +16,7 @@ public class GroundMoveBehaviour : MoveBehaviour {
 	
 	private float mBaseJumpSpeed = 600;
 	private float mCalcJumpSpeed = 600;
-	private float mGravitySpeed = 30;
+	private float mGravitySpeed = 20;
 	
 	private int mMaxAirJump = 1;
 	private int mCurrentAirJump = 0;
@@ -51,9 +46,7 @@ public class GroundMoveBehaviour : MoveBehaviour {
 	public override void Update ()
 	{
 		if (mIsEnabled)
-		{
-			CheckInput ();
-			
+		{	
 			CheckGrounded ();
 			CheckOrientation ();
 			if (mMove)
@@ -72,27 +65,9 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		}
 	}
 	
-	private void CheckInput ()
-	{
-		if (Input.GetKey(KeyCode.D))
-		{
-			Right ();
-		}
-		if (mJump && Input.GetKeyDown(KeyCode.W))
-		{
-			Up ();
-		}
-		if (Input.GetKey(KeyCode.A))
-		{
-			Left ();
-		}
-		if (Input.GetKey(KeyCode.Alpha1))
-		{
-			mOrigin.SetMovementBehaviour(new AirMoveBehaviour(mOrigin));	
-		}
-	}
+
 	
-	protected override void Left ()
+	public override void Left ()
 	{
 		// Apply acceleration
 		mMoveVelocity.x -= mCalcMoveAccel;
@@ -101,26 +76,26 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		{
 			mMoveVelocity.x = -mCalcMoveSpeed;	
 		}
-		
 	}
 	
-	protected override void Up ()
+	public override void Up ()
 	{
 		// Apply initial jump velocity
-		if (!mAirborne || mCurrentAirJump < mMaxAirJump)
+		if (mJump && (!mAirborne || mCurrentAirJump < mMaxAirJump))
 		{
 			mAirborne = true;
+			mOrigin.SetHitFlag(ICombatant.HitFlag.AERIAL);
 			mCurrentAirJump++;
 			mMoveVelocity.y = mCalcJumpSpeed;
 		}
 	}
 	
-	protected override void Down ()
+	public override void Down ()
 	{
 		//No-op
 	}	
 	
-	protected override void Right ()
+	public override void Right ()
 	{
 		mMoveVelocity.x += mCalcMoveAccel;
 		
@@ -132,7 +107,6 @@ public class GroundMoveBehaviour : MoveBehaviour {
 	
 	protected override void Move ()
 	{
-
 		CharacterController cc = (CharacterController)mOrigin.GetComponent<CharacterController>();
 		cc.Move(mMoveVelocity * Time.deltaTime);
 	}
@@ -144,9 +118,9 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		
 		if (hit.gameObject.tag == "Ground" && cc.collisionFlags == CollisionFlags.Below)
 		{
-			
 			mMoveVelocity.y = 0;
 			mAirborne = false;
+			mOrigin.SetHitFlag(ICombatant.HitFlag.GROUNDED);
 			mCurrentAirJump = 0;
 		}
 		
@@ -154,7 +128,6 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		if (hit.gameObject.tag == "Ground" && cc.collisionFlags == CollisionFlags.Sides)
 		{
 			mMoveVelocity.x = 0;
-			
 			// if wall jumping enabled
 			mCurrentAirJump = 0;
 		}
@@ -162,10 +135,6 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		if (hit.gameObject.tag == "Ground" && cc.collisionFlags == CollisionFlags.CollidedAbove)
 		{
 			mMoveVelocity.y = 0f;	
-		}
-		if (hit.gameObject.tag == "Fireball")
-		{
-			hit.gameObject.SendMessage("ApplyDamage");	
 		}
 	}
 	
@@ -234,7 +203,6 @@ public class GroundMoveBehaviour : MoveBehaviour {
 	private void ApplyGravity ()
 	{
 		mMoveVelocity.y -= mGravitySpeed;
-		
 	}
 	
 	private void CheckGrounded ()
@@ -258,7 +226,15 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		
         mAirborne = (!Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 1) && !Physics.Raycast(pos, down, out hit, mMoveVelocity.y * Time.deltaTime + 1));
 		
-
+		if (mAirborne)
+		{
+			mOrigin.SetHitFlag(ICombatant.HitFlag.AERIAL);
+		}
+		else
+		{
+			mOrigin.SetHitFlag(ICombatant.HitFlag.GROUNDED);
+		}
+		
 		Debug.DrawRay(pos, mMoveVelocity * Time.deltaTime, Color.red);
 		Debug.DrawRay(pos2, mMoveVelocity * Time.deltaTime, Color.red);
 	}
@@ -267,17 +243,12 @@ public class GroundMoveBehaviour : MoveBehaviour {
 	{
 		if (mMoveVelocity.x > 0)
 		{
-			mOrientation = 1;
-			
-			
 			Vector3 localScale = mOrigin.transform.localScale;
 			localScale.x = Mathf.Abs(mOrigin.transform.localScale.x);
 			mOrigin.transform.localScale = localScale;
 		}
 		if (mMoveVelocity.x < 0)
 		{
-			mOrientation = -1;
-			
 			Vector3 localScale = mOrigin.transform.localScale;
 			localScale.x = -Mathf.Abs(mOrigin.transform.localScale.x);
 			mOrigin.transform.localScale = localScale;

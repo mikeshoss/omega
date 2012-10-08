@@ -35,9 +35,13 @@ public abstract class BaseBehaviour {
 		mIsEnabled = false;	
 	}
 	
+	public bool IsEnabled ()
+	{
+		return mIsEnabled;	
+	}
+	
 	public BType GetBType()
 	{
 		return mBehaviourType;
 	}
-	
 }

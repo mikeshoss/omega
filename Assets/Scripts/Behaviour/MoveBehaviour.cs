@@ -4,7 +4,7 @@ using System.Collections;
 public abstract class MoveBehaviour : BaseBehaviour {
 	
 	// Flags to handle functionality
-	protected bool mMove;
+	protected bool 		mMove;
 	
 	protected float 	mBaseMoveSpeed;
 	protected float 	mCalcMoveSpeed;
@@ -48,13 +48,13 @@ public abstract class MoveBehaviour : BaseBehaviour {
 		mMove = false;
 	}
 	
-	protected abstract void Left ();
+	public abstract void Left ();
 	
-	protected abstract void Up ();
+	public abstract void Up ();
 	
-	protected abstract void Down ();
+	public abstract void Down ();
 	
-	protected abstract void Right ();
+	public abstract void Right ();
 	
 	protected abstract void Move ();
 	

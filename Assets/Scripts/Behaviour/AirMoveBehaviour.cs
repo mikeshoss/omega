@@ -37,22 +37,22 @@ public class AirMoveBehaviour : MoveBehaviour {
 		}
 	}
 	
-	protected override void Left ()
+	public override void Left ()
 	{
 		mOrigin.transform.Translate(new Vector3(0, -500 * Time.deltaTime, 0));
 	}
 	
-	protected override void Up ()
+	public override void Up ()
 	{
 		mOrigin.transform.Translate(new Vector3(0, 500 * Time.deltaTime, 0));
 	}
 	
-	protected override void Right ()
+	public override void Right ()
 	{
 		mOrigin.transform.Translate(new Vector3(500 * Time.deltaTime, 0,0));
 	}
 	
-	protected override void Down ()
+	public override void Down ()
 	{
 		mOrigin.transform.Translate(new Vector3(-500 * Time.deltaTime, 0,0));
 	}
