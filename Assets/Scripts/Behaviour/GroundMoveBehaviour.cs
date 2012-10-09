@@ -3,7 +3,6 @@ using System.Collections;
 
 public class GroundMoveBehaviour : MoveBehaviour {
 	
-	
 	// Flags used to toggle functionality
 	private bool mJump = true;
 	
@@ -28,15 +27,15 @@ public class GroundMoveBehaviour : MoveBehaviour {
 	}
 	
 	public GroundMoveBehaviour (ICombatant origin, float baseMoveSpeed, float baseMoveAccel)
-		: base(origin, baseMoveSpeed, baseMoveAccel)
+		: this(origin)
 	{
-		mBehaviourType = BType.GROUND_MOVE_BEHAVIOUR;
+		mBaseMoveSpeed = baseMoveSpeed;
+		mBaseMoveAccel = baseMoveAccel;
 	}
 	
 	public GroundMoveBehaviour (ICombatant origin, float baseMoveSpeed, float baseMoveAccel, float baseJumpSpeed, int maxAirJump)
-		: base(origin, baseMoveSpeed, baseMoveAccel)
+		: this(origin, baseMoveSpeed, baseMoveAccel)
 	{
-		mBehaviourType = BType.GROUND_MOVE_BEHAVIOUR;
 		mBaseJumpSpeed = baseJumpSpeed;
 		mCalcJumpSpeed = mBaseJumpSpeed;
 		mMaxAirJump = maxAirJump;
@@ -49,23 +48,18 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		{	
 			CheckGrounded ();
 			CheckOrientation ();
-			if (mMove)
-			{
-				if (mAirborne)
-				{	
-					ApplyWindFriction ();
-					ApplyGravity ();
-				}
-				else
-				{
-					ApplyGroundFriction ();
-				}
-				Move ();
+			if (mAirborne)
+			{	
+				ApplyWindFriction ();
+				ApplyGravity ();
 			}
+			else
+			{
+				ApplyGroundFriction ();
+			}
+			Move ();
 		}
 	}
-	
-
 	
 	public override void Left ()
 	{
@@ -84,7 +78,9 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		if (mJump && (!mAirborne || mCurrentAirJump < mMaxAirJump))
 		{
 			mAirborne = true;
-			mOrigin.SetHitFlag(ICombatant.HitFlag.AERIAL);
+			exSprite ex = (exSprite)mOrigin.GetComponent<exSprite>();
+			ex.spanim.Play("ninja_jump", 0);
+			mOrigin.hitFlag = ICombatant.HitFlag.AERIAL;
 			mCurrentAirJump++;
 			mMoveVelocity.y = mCalcJumpSpeed;
 		}
@@ -120,7 +116,10 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		{
 			mMoveVelocity.y = 0;
 			mAirborne = false;
-			mOrigin.SetHitFlag(ICombatant.HitFlag.GROUNDED);
+			exSprite ex = (exSprite)mOrigin.GetComponent<exSprite>();
+			if (!ex.spanim.IsPlaying("ninja_run"))
+				ex.spanim.Play("ninja_run");
+			mOrigin.hitFlag = ICombatant.HitFlag.GROUNDED;
 			mCurrentAirJump = 0;
 		}
 		
@@ -158,7 +157,10 @@ public class GroundMoveBehaviour : MoveBehaviour {
 			// If friction depletes velocity
 			if (mMoveVelocity.x < 0)
 			{
-				mMoveVelocity.x = 0;	
+				mMoveVelocity.x = 0;
+				exSprite ex = (exSprite)mOrigin.GetComponent<exSprite>();
+				if (!ex.spanim.IsPlaying("ninja_land"))
+					ex.spanim.Play("ninja_land");
 			}
 		}
 		// If moving left
@@ -169,7 +171,10 @@ public class GroundMoveBehaviour : MoveBehaviour {
 			// If friction depletes velocity
 			if (mMoveVelocity.x > 0)
 			{
-				mMoveVelocity.x = 0;	
+				mMoveVelocity.x = 0;
+				exSprite ex = (exSprite)mOrigin.GetComponent<exSprite>();
+				if (!ex.spanim.IsPlaying("ninja_land"))
+					ex.spanim.Play("ninja_land");
 			}
 		}
 	}
@@ -228,11 +233,17 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		
 		if (mAirborne)
 		{
-			mOrigin.SetHitFlag(ICombatant.HitFlag.AERIAL);
+			mOrigin.hitFlag = ICombatant.HitFlag.AERIAL;
+			exSprite ex = (exSprite)mOrigin.GetComponent<exSprite>();
+			if(!ex.spanim.IsPlaying("ninja_jump"))
+				ex.spanim.Play("ninja_jump");
 		}
 		else
 		{
-			mOrigin.SetHitFlag(ICombatant.HitFlag.GROUNDED);
+			mOrigin.hitFlag = ICombatant.HitFlag.GROUNDED;
+			exSprite ex = (exSprite)mOrigin.GetComponent<exSprite>();
+			if(!ex.spanim.IsPlaying("ninja_run") && !ex.spanim.IsPlaying("ninja_land") && mMoveVelocity.x != 0)
+				ex.spanim.Play("ninja_run");
 		}
 		
 		Debug.DrawRay(pos, mMoveVelocity * Time.deltaTime, Color.red);

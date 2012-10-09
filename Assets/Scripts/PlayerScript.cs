@@ -34,8 +34,6 @@ public class PlayerScript : ICombatant {
 			mMovement.Left ();
 		}
 		
-		// Game State Changes
-		
 		// Action Bar
 		if (Input.GetKey(KeyCode.Alpha1))
 		{
@@ -53,14 +51,24 @@ public class PlayerScript : ICombatant {
 		{
 			
 		}
+		if (Input.GetKey(KeyCode.Q))
+		{
+			
+		}
+		if (Input.GetKey(KeyCode.E))
+		{
+			
+		}
 		
 		// Action
-		 
+		if (Input.GetKey(KeyCode.Space))
+		{
+			
+		}
 	}
 	
 	void OnTriggerEnter (Collider collider)
 	{
 	
 	}
-
 }

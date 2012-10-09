@@ -15,13 +15,49 @@ public abstract class Skill {
 	protected HitDefinition mHitDef;
 	protected ICombatant	mOrigin;
 	
+	public int damage
+	{
+		get
+		{
+			return mDamage;	
+		}
+	}
+	
+	public Element element
+	{
+		get
+		{
+			return mElement;	
+		}
+	}
+	
+	public HitDefinition hitDefinition
+	{
+		get
+		{
+			return mHitDef;	
+		}
+	}
+	
+	public ICombatant origin
+	{
+		get
+		{
+			return mOrigin;	
+		}
+	}
+	
+	
 	public Skill (ICombatant origin)
 	{
 		mOrigin = origin;
 	}
 	
-	public ICombatant GetOrigin ()
+	public Skill (ICombatant origin, int damage, Element element, HitDefinition hitDef)
+		: this(origin)
 	{
-		return mOrigin;	
+		mDamage = damage;
+		mElement = element;
+		mHitDef = hitDef;
 	}
 }

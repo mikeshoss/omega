@@ -8,7 +8,7 @@ public class FireballScript : SkillScript {
 	
 	void Start () 
 	{
-		ICombatant origin = mSkill.GetOrigin();
+		ICombatant origin = mSkill.origin;
 		mSprite = GetComponent<exSprite>();
 		
 		Vector3 originLocation = origin.transform.position;

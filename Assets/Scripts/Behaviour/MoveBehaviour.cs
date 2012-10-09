@@ -3,9 +3,6 @@ using System.Collections;
 
 public abstract class MoveBehaviour : BaseBehaviour {
 	
-	// Flags to handle functionality
-	protected bool 		mMove;
-	
 	protected float 	mBaseMoveSpeed;
 	protected float 	mCalcMoveSpeed;
 	protected float		mBaseMoveAccel;
@@ -14,10 +11,10 @@ public abstract class MoveBehaviour : BaseBehaviour {
 	protected Vector3 	mMoveDirection;
 	protected Vector3	mMoveVelocity;
 	
+	
 	public MoveBehaviour (ICombatant origin)
 		: base (origin)
 	{
-		mMove = true;
 		mMoveDirection = new Vector3(0, 0, 0);
 		mMoveVelocity = new Vector3(0, 0, 0);
 		mBaseMoveSpeed = 500;
@@ -27,25 +24,12 @@ public abstract class MoveBehaviour : BaseBehaviour {
 	}
 	
 	public MoveBehaviour (ICombatant origin, float baseMoveSpeed, float baseMoveAccel)
-		: base (origin)
+		: this (origin)
 	{
-		mMove = true;
-		mMoveDirection = new Vector3(0, 0, 0);
-		mMoveVelocity = new Vector3(0, 0, 0);
 		mBaseMoveSpeed = baseMoveSpeed;
 		mCalcMoveSpeed = mBaseMoveSpeed;
 		mBaseMoveAccel = baseMoveAccel;
 		mCalcMoveAccel = mBaseMoveAccel;
-	}
-
-	public void EnableMove ()
-	{
-		mMove = true;
-	}
-	
-	public void DisableMove ()
-	{
-		mMove = false;
 	}
 	
 	public abstract void Left ();

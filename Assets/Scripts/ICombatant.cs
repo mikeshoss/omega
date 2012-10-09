@@ -7,6 +7,30 @@ public abstract class ICombatant : MonoBehaviour {
 	protected MoveBehaviour mMovement;
 	protected HitFlag mHitFlag;
 	
+	public MoveBehaviour movement
+	{
+		get
+		{
+			return mMovement;	
+		}
+		set
+		{
+			mMovement = value;	
+		}
+	}
+	
+	public HitFlag hitFlag
+	{
+		get
+		{
+			return mHitFlag;	
+		}
+		set
+		{
+			mHitFlag = value;	
+		}
+	}
+	
 	public enum HitFlag
 	{
 		GROUNDED,
@@ -17,21 +41,6 @@ public abstract class ICombatant : MonoBehaviour {
 	{
 		mMovement = null;
 		mHitFlag = HitFlag.GROUNDED;
-	}
-	
-	public void SetMovementBehaviour (MoveBehaviour behaviour)
-	{
-		mMovement = behaviour;	
-	}
-	
-	public HitFlag GetHitFlag ()
-	{
-		return mHitFlag;	
-	}
-	
-	public void SetHitFlag (HitFlag hitFlag)
-	{
-		mHitFlag = hitFlag;
 	}
 	
 	void OnControllerColliderHit(ControllerColliderHit hit)

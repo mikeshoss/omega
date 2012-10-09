@@ -13,27 +13,6 @@ public class AirMoveBehaviour : MoveBehaviour {
 	{
 		if (mIsEnabled)
 		{
-			
-			if (Input.GetKey(KeyCode.D))
-			{
-				Right ();
-			}
-			if (Input.GetKey(KeyCode.W))
-			{
-				Up ();
-			}
-			if (Input.GetKey(KeyCode.A))
-			{
-				Down ();
-			}
-			if (Input.GetKey(KeyCode.S))
-			{
-				Left ();
-			}
-			if (Input.GetKey(KeyCode.Alpha2))
-			{
-				mOrigin.SetMovementBehaviour(new GroundMoveBehaviour(mOrigin));	
-			}
 		}
 	}
 	
