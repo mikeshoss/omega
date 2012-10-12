@@ -20,6 +20,7 @@ public class GroundMoveBehaviour : MoveBehaviour {
 	private int mMaxAirJump = 1;
 	private int mCurrentAirJump = 0;
 	
+	
 	public GroundMoveBehaviour (ICombatant origin)
 		: base(origin)
 	{
@@ -78,8 +79,6 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		if (mJump && (!mAirborne || mCurrentAirJump < mMaxAirJump))
 		{
 			mAirborne = true;
-			exSprite ex = (exSprite)mOrigin.GetComponent<exSprite>();
-			ex.spanim.Play("ninja_jump", 0);
 			mOrigin.hitFlag = ICombatant.HitFlag.AERIAL;
 			mCurrentAirJump++;
 			mMoveVelocity.y = mCalcJumpSpeed;
@@ -116,9 +115,10 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		{
 			mMoveVelocity.y = 0;
 			mAirborne = false;
-			exSprite ex = (exSprite)mOrigin.GetComponent<exSprite>();
-			if (!ex.spanim.IsPlaying("ninja_run"))
-				ex.spanim.Play("ninja_run");
+			
+			if (mMoveVelocity.x != 0){}
+			
+			if (mMoveVelocity.x == 0){}
 			mOrigin.hitFlag = ICombatant.HitFlag.GROUNDED;
 			mCurrentAirJump = 0;
 		}
@@ -137,16 +137,6 @@ public class GroundMoveBehaviour : MoveBehaviour {
 		}
 	}
 	
-	public void EnableJump ()
-	{
-		mJump = true;	
-	}
-	
-	public void DisableJump ()
-	{
-		mJump = false;	
-	}
-	
 	private void ApplyGroundFriction ()
 	{
 		// If moving right
@@ -158,9 +148,7 @@ public class GroundMoveBehaviour : MoveBehaviour {
 			if (mMoveVelocity.x < 0)
 			{
 				mMoveVelocity.x = 0;
-				exSprite ex = (exSprite)mOrigin.GetComponent<exSprite>();
-				if (!ex.spanim.IsPlaying("ninja_land"))
-					ex.spanim.Play("ninja_land");
+				
 			}
 		}
 		// If moving left
@@ -172,9 +160,6 @@ public class GroundMoveBehaviour : MoveBehaviour {
 			if (mMoveVelocity.x > 0)
 			{
 				mMoveVelocity.x = 0;
-				exSprite ex = (exSprite)mOrigin.GetComponent<exSprite>();
-				if (!ex.spanim.IsPlaying("ninja_land"))
-					ex.spanim.Play("ninja_land");
 			}
 		}
 	}
@@ -219,35 +204,39 @@ public class GroundMoveBehaviour : MoveBehaviour {
 
 		Vector3 pos = mOrigin.transform.position;
 		
-		pos.y -= (height / 2) * mOrigin.transform.localScale.y;
+		pos.y -= (height / 2) * mOrigin.transform.localScale.y - 25;
 		pos.x -= cc.radius;
 		
 		RaycastHit hit2;
 
 		Vector3 pos2 = mOrigin.transform.position;
 		
-		pos2.y -= (height / 2) * mOrigin.transform.localScale.y;
+		pos2.y -= (height / 2) * mOrigin.transform.localScale.y - 25;
 		pos2.x += cc.radius;
 		
-        mAirborne = (!Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 1) && !Physics.Raycast(pos, down, out hit, mMoveVelocity.y * Time.deltaTime + 1));
+        mAirborne = (!Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 26) && !Physics.Raycast(pos, down, out hit, mMoveVelocity.y * Time.deltaTime + 26));
 		
 		if (mAirborne)
 		{
 			mOrigin.hitFlag = ICombatant.HitFlag.AERIAL;
-			exSprite ex = (exSprite)mOrigin.GetComponent<exSprite>();
-			if(!ex.spanim.IsPlaying("ninja_jump"))
-				ex.spanim.Play("ninja_jump");
 		}
 		else
 		{
 			mOrigin.hitFlag = ICombatant.HitFlag.GROUNDED;
-			exSprite ex = (exSprite)mOrigin.GetComponent<exSprite>();
-			if(!ex.spanim.IsPlaying("ninja_run") && !ex.spanim.IsPlaying("ninja_land") && mMoveVelocity.x != 0)
-				ex.spanim.Play("ninja_run");
+			if(mMoveVelocity.x != 0)
+			{
+			}
+			
+			if(mMoveVelocity.x == 0)
+			{
+			}
+			
+			
 		}
-		
-		Debug.DrawRay(pos, mMoveVelocity * Time.deltaTime, Color.red);
-		Debug.DrawRay(pos2, mMoveVelocity * Time.deltaTime, Color.red);
+		Vector3 v = mMoveVelocity * Time.deltaTime;
+		v.y -= 26;
+		Debug.DrawRay(pos, v, Color.red);
+		Debug.DrawRay(pos2, v, Color.red);
 	}
 	
 	private void CheckOrientation ()
@@ -257,12 +246,14 @@ public class GroundMoveBehaviour : MoveBehaviour {
 			Vector3 localScale = mOrigin.transform.localScale;
 			localScale.x = Mathf.Abs(mOrigin.transform.localScale.x);
 			mOrigin.transform.localScale = localScale;
+			mDirection = 1;
 		}
 		if (mMoveVelocity.x < 0)
 		{
 			Vector3 localScale = mOrigin.transform.localScale;
 			localScale.x = -Mathf.Abs(mOrigin.transform.localScale.x);
 			mOrigin.transform.localScale = localScale;
+			mDirection = -1;
 		}
 	}
 }

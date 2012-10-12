@@ -4,7 +4,7 @@ using System.Collections;
 public class HitDefinition {
 	
 	private ICombatant.HitFlag[] mHitFlags;
-	private int mAnimType;
+	private ICombatant.AnimType mAnimType;
 	private Priority mPriority;
 	
 	public ICombatant.HitFlag[] hitFlags
@@ -15,7 +15,7 @@ public class HitDefinition {
 		}
 	}
 	
-	public int animType
+	public ICombatant.AnimType animType
 	{
 		get
 		{
@@ -37,7 +37,7 @@ public class HitDefinition {
 		mHitFlags[1] = ICombatant.HitFlag.AERIAL;
 	}
 	
-	public HitDefinition (ICombatant.HitFlag[] hitFlags, int animType, Priority priority)
+	public HitDefinition (ICombatant.HitFlag[] hitFlags, ICombatant.AnimType animType, Priority priority)
 	{
 		mHitFlags = hitFlags;
 		mAnimType = animType;

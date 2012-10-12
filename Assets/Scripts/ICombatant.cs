@@ -1,11 +1,17 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent (typeof(CharacterController))]
 public abstract class ICombatant : MonoBehaviour {
 	
 	protected MoveBehaviour mMovement;
+	protected exSprite mSprite;
+	
 	protected HitFlag mHitFlag;
+	protected List<SkillSet> mSkillSets = new List<SkillSet>();
+	protected SkillSet mSelectedSkillSet;
+	protected Skill mSelectedSkill;
 	
 	public MoveBehaviour movement
 	{
@@ -37,6 +43,21 @@ public abstract class ICombatant : MonoBehaviour {
 		AERIAL
 	}
 	
+	public enum AnimType
+	{
+		NONE,
+		IDLE,
+		MOVE,
+		JUMP,
+		ATTACK1,
+		ATTACK2,
+		ATTACK3,
+		HIT1,
+		HIT2,
+		HIT3,
+		DIE
+	}
+	
 	void Start ()
 	{
 		mMovement = null;
@@ -47,4 +68,8 @@ public abstract class ICombatant : MonoBehaviour {
 	{
 		mMovement.OnControllerColliderHit(hit);
 	}
+	
+	public abstract void UpdateAnimation ();
+	
+	
 }

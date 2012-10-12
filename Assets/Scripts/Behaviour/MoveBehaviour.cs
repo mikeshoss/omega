@@ -10,7 +10,15 @@ public abstract class MoveBehaviour : BaseBehaviour {
 	
 	protected Vector3 	mMoveDirection;
 	protected Vector3	mMoveVelocity;
+	protected int 		mDirection = 1;
 	
+	public int direction
+	{
+		get
+		{
+			return mDirection;	
+		}
+	}
 	
 	public MoveBehaviour (ICombatant origin)
 		: base (origin)

@@ -1,11 +1,23 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerScript : ICombatant {
+	
+	private PlayerData mPlayerData;
 	
 	void Start ()
 	{
 		mMovement = new GroundMoveBehaviour(this,550,70,600,2);
+		mPlayerData = new PlayerData(this);
+		// Animations
+		mSprite = (exSprite)GetComponent<exSprite>();
+		
+		
+		// Skills
+		mSkillSets = mPlayerData.skillSets;
+		mSelectedSkillSet = mPlayerData.selectedSkillSet;
+		mSelectedSkill = mSelectedSkillSet.GetSkill(0);
 	}
 	
 	void Update ()
@@ -35,36 +47,41 @@ public class PlayerScript : ICombatant {
 		}
 		
 		// Action Bar
-		if (Input.GetKey(KeyCode.Alpha1))
+		if (Input.GetKeyDown(KeyCode.Alpha1))
+		{
+			mSelectedSkill = mSelectedSkillSet.GetSkill(0);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha2))
+		{
+			mSelectedSkill = mSelectedSkillSet.GetSkill(1);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha3))
 		{
 			
 		}
-		if (Input.GetKey(KeyCode.Alpha2))
+		if (Input.GetKeyDown(KeyCode.Alpha4))
 		{
 			
 		}
-		if (Input.GetKey(KeyCode.Alpha3))
+		if (Input.GetKeyDown(KeyCode.Q))
 		{
 			
 		}
-		if (Input.GetKey(KeyCode.Alpha4))
-		{
-			
-		}
-		if (Input.GetKey(KeyCode.Q))
-		{
-			
-		}
-		if (Input.GetKey(KeyCode.E))
+		if (Input.GetKeyDown(KeyCode.E))
 		{
 			
 		}
 		
 		// Action
-		if (Input.GetKey(KeyCode.Space))
+		if (Input.GetKeyDown(KeyCode.Space))
 		{
-			
+			mSelectedSkill.Execute();
 		}
+	}
+	
+	public override void UpdateAnimation ()
+	{
+		
 	}
 	
 	void OnTriggerEnter (Collider collider)

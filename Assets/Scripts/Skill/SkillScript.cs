@@ -4,18 +4,15 @@ using System.Collections;
 [RequireComponent (typeof(exSprite))]
 public abstract class SkillScript : MonoBehaviour {
 	
-	protected Skill 	mSkill;
-	protected exSprite 	mSprite;
+	protected Skill mSkill;
 	
 	void Update ()
 	{
-		Execute();
+		if (mSkill != null)
+			Execute();
 	}
 	
 	protected abstract void Execute ();
 	
-	public void SetSkill (Skill skill)
-	{
-		mSkill = skill;	
-	}
+	public abstract void Initialize (Skill skill);
 }
