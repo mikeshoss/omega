@@ -9,6 +9,7 @@ Trees:
 	AI_PlayerRun
 	AI_PlayerIdle
 	AI_PlayerAttack
+	Player_PlayerAI
 	Unknown
 
 Contexts:
@@ -17,7 +18,7 @@ Contexts:
 Branch priority groups:
 	Unknown
 
-Actions (15: 1 - 16):
+Actions (18: 1 - 19):
 	JumpInput (1)
 	JumpAnimate (2)
 	Jump (3)
@@ -33,10 +34,13 @@ Actions (15: 1 - 16):
 	AttackInput (13)
 	AttackAnimate (14)
 	AttackSpawn (15)
-	Unknown (16)
+	JumpCheckInput (16)
+	RunCheck (17)
+	JumpCheckAirborne (18)
+	Unknown (19)
 
-Decorators (1: 17 - 18):
-	CheckRequestingAttack (17)
-	Unknown (18)
+Decorators (1: 20 - 21):
+	CheckRequestingAttack (20)
+	Unknown (21)
 
 Agent classes:
