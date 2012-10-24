@@ -12,6 +12,9 @@ public class PlayerScript : MonoBehaviour {
 	private bool mJumpPressed;
 	private bool mAirborne;
 	private bool mRunPressed; //Raybeans and Shossauce and ColdHam.
+	private bool mSkillPressed;
+	private bool mAttackPressed;
+	private bool mCurrentSkill;
 	
 	// Use this for initialization
 	void Start () {
@@ -22,15 +25,42 @@ public class PlayerScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		mJumpPressed = Input.GetKey(KeyCode.Space);
 		mRunPressed = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D);//Raybeans and Shossauce and ColdHam.
 	
+		mJumpPressed = Input.GetKey(KeyCode.W);
+		mSkillPressed = Input.GetKey(KeyCode.Alpha1) || 
+						Input.GetKey(KeyCode.Alpha2) || 
+						Input.GetKey(KeyCode.Alpha3) || 
+						Input.GetKey(KeyCode.Alpha4);
+		mAttackPressed = Input.GetKey(KeyCode.Space);
 	}
+	
+	
 	
 	void FixedUpdate () {
 		ApplyGravity();
 		Move ();
 	}
+	
+	public bool SkillCheckInput ()
+	{
+		return mSkillPressed;
+	}
+	
+	public bool AttackCheckInput ()
+	{
+		return mAttackPressed;
+	}
+	
+	public void ActiveSkill () 
+	{
+	}
+	
+	public bool CheckSkillActive ()
+	{
+		return true;
+	}
+	
 	
 	public bool JumpCheckInput ()	
 	{
@@ -91,5 +121,9 @@ public class PlayerScript : MonoBehaviour {
 	public void Move()
 	{
 		gameObject.transform.Translate(mMoveVelocity);
+	}
+	
+	public void Attack()
+	{
 	}
 }
