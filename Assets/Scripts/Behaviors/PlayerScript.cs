@@ -10,6 +10,8 @@ public class PlayerScript : MonoBehaviour {
 	private int mCurrentJumpNumber;
 	
 	private bool mJumpPressed;
+	private bool mJumpWait;
+	private bool mJumpMax;
 	private bool mAirborne;
 	private bool mSkillPressed;
 	private bool mAttackPressed;
@@ -19,6 +21,7 @@ public class PlayerScript : MonoBehaviour {
 	void Start () {
 		mMoveVelocity = new Vector3(0,0,0);
 		mAirborne = false;
+		mJumpWait = true;
 		mAI = (PlayerAI)gameObject.AddComponent("PlayerAI");
 	}
 	
@@ -57,21 +60,33 @@ public class PlayerScript : MonoBehaviour {
 	{
 		return true;
 	}
-	
-	
-	public bool JumpCheckInput ()	
-	{
-		// if player hit jump key, return true
-		return mJumpPressed;
 		
+	public bool CheckJumpInput ()	
+	{
+		return mJumpPressed;
 	}
 	
-	public bool JumpCheckAirborne ()
+	public bool CheckJumpWaitTime ()
 	{
-		// if he is not airborne, allow a jump
+		return mJumpWait;	
+	}
+	
+	private void SetJumpWait(bool val)
+	{
+		mJumpWait = val;
+	}
+	
+	IEnumerator CoroutineJumpWaitTime ()
+	{
+		SetJumpWait(false);
+		yield return new WaitForSeconds(mPlayer.JumpWaitTime);
+		SetJumpWait(true);
+	}
+	
+	public bool CheckAirborne ()
+	{
 		if (mAirborne)
 		{
-			// if he is airborne, check for air jump
 			return false;
 		}
 		return true;
@@ -80,7 +95,8 @@ public class PlayerScript : MonoBehaviour {
 	public void JumpAction ()
 	{
 		mAirborne = true;
-		mMoveVelocity.y += 10.0f;
+		StartCoroutine(CoroutineJumpWaitTime());
+		mMoveVelocity.y = mPlayer.JumpVelocity;
 	}
 	
 	public void ApplyGravity ()

@@ -19,7 +19,7 @@ Contexts:
 Branch priority groups:
 	Unknown
 
-Actions (31: 1 - 32):
+Actions (33: 1 - 34):
 	JumpInput (1)
 	JumpAnimate (2)
 	Jump (3)
@@ -38,24 +38,26 @@ Actions (31: 1 - 32):
 	JumpCheckInput (16)
 	RunCheck (17)
 	JumpCheckAirborne (18)
-	SkillCheckInput (19)
+	CheckSkillInput (19)
 	ActiveSkill (20)
-	AttackCheckInput (21)
-	AttackCheckUsable (22)
-	CheckAirborne (23)
-	CheckJumpWaitTime (24)
-	CheckMaxJump (25)
-	RunCheckInput (26)
-	AnimateJump (27)
-	AnimateRun (28)
-	AnimateAttack (29)
-	Attack (30)
-	AnimateIdle (31)
-	Unknown (32)
+	CheckAttackInput (21)
+	CheckAttackUsable (22)
+	CheckJumpInput (23)
+	CheckAirborne (24)
+	CheckJumpWaitTime (25)
+	CheckMaxJump (26)
+	RunCheckInput (27)
+	AnimateJump (28)
+	AnimateRun (29)
+	AnimateAttack (30)
+	Attack (31)
+	AnimateIdle (32)
+	CheckSkillActive (33)
+	Unknown (34)
 
-Decorators (2: 33 - 35):
-	CheckRequestingAttack (33)
-	CheckAttack (34)
-	Unknown (35)
+Decorators (2: 35 - 37):
+	CheckRequestingAttack (35)
+	CheckAttack (36)
+	Unknown (37)
 
 Agent classes:

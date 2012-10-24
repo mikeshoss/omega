@@ -45,7 +45,7 @@ public class PlayerAI : MonoBehaviour, IAgent {
 		return BehaveResult.Success;
 	}
 	
-	public BehaveResult TickSkillCheckInputAction (Tree sender)
+	public BehaveResult TickCheckSkillInputAction (Tree sender)
 	{
 		if (mPlayer.SkillCheckInput())
 			return BehaveResult.Success;
@@ -65,17 +65,17 @@ public class PlayerAI : MonoBehaviour, IAgent {
 			return BehaveResult.Failure;
 	}
 	
-	public BehaveResult TickAttackCheckInputAction (Tree sender)
+	public BehaveResult TickCheckAttackInputAction (Tree sender)
 	{
 		if (mPlayer.AttackCheckInput())
 			return BehaveResult.Success;
 			return BehaveResult.Failure;
 	}
 	
-	public BehaveResult TickAttackCeckUsableAction (Tree sender)
+	public BehaveResult TickCheckAttackUsableAction (Tree sender)
 	{
 		Debug.Log("Check if Attack is Usable");
-		return BehaveResult.Failure;
+		return BehaveResult.Success;
 	}
 	
 	public BehaveResult TickAnimateAttackAction (Tree sender)
@@ -87,6 +87,49 @@ public class PlayerAI : MonoBehaviour, IAgent {
 	public BehaveResult TickAttackAction (Tree sender)
 	{
 		Debug.Log("Check if Attack Carried out");
+		return BehaveResult.Failure;
+	}
+	
+	/*
+	 * Jump
+	 */
+	public BehaveResult TickCheckJumpInputAction (Tree sender)
+	{
+		if (mPlayer.CheckJumpInput())
+		{
+			return BehaveResult.Success;	
+		}
+		return BehaveResult.Failure;
+	}
+	
+	public BehaveResult TickCheckAirborneAction (Tree sender)
+	{
+		if (mPlayer.CheckAirborne())
+		{
+			return BehaveResult.Success;
+		}
+		return BehaveResult.Failure;
+	}
+	
+	public BehaveResult TickJumpCheckWaitTimeAction (Tree sender)
+	{
+		if (mPlayer.CheckJumpWaitTime())
+			return BehaveResult.Success;
+		return BehaveResult.Failure;
+	}
+	
+	public BehaveResult TickCheckMaxJumpAction (Tree sender)
+	{
+		return BehaveResult.Failure;
+	}
+	
+	public BehaveResult TickJumpAction (Tree sender)
+	{
+		return BehaveResult.Failure;
+	}
+	
+	public BehaveResult TickAnimateJumpAction (Tree sender)
+	{
 		return BehaveResult.Failure;
 	}
 }
