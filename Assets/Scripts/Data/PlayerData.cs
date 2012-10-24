@@ -9,7 +9,7 @@ public class Skill {
 
 public class PlayerData {
 	
-	private const int[] kLevelCaps = 
+	private int[] kLevelCaps = new int[]
 	{
 		0,10,30,60,100,150,210,280,370,500
 	};
@@ -48,7 +48,7 @@ public class PlayerData {
 	/*
 	 * Member Variable Properties
 	 */
-	public int MaxHealth
+	public float MaxHealth
 	{
 		get
 		{
@@ -56,7 +56,7 @@ public class PlayerData {
 		}
 	}
 	
-	public int MaxEnergy
+	public float MaxEnergy
 	{
 		get
 		{
@@ -131,7 +131,7 @@ public class PlayerData {
 		}
 	}
 	
-	public int JumpWaitTime
+	public float JumpWaitTime
 	{
 		get
 		{
@@ -139,7 +139,7 @@ public class PlayerData {
 		}
 	}	
 	
-	public int JumpVelocity
+	public float JumpVelocity
 	{
 		get
 		{
