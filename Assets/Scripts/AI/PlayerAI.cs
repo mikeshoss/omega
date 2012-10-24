@@ -40,6 +40,47 @@ public class PlayerAI : MonoBehaviour, IAgent {
 		return BehaveResult.Failure;
 	}
 	
+	/*
+	 * Run Branch
+	 */
+	public BehaveResult TickCheckRunInputAction(Tree sender)
+	{
+		if(mPlayer.CheckRunInput())
+			return BehaveResult.Success;	
+		
+		return BehaveResult.Failure;
+	}
+	
+	public BehaveResult TickRunAction(Tree sender)
+	{
+		mPlayer.RunAction();
+		return BehaveResult.Success;
+	}
+	
+	public BehaveResult TickAnimateRunAction(Tree sender)
+	{
+		mPlayer.AnimateRun();
+		return BehaveResult.Success;
+	}
+	
+	/*
+	 * Idle Branch
+	 */
+	public BehaveResult TickAnimateIdleAction(Tree sender)
+	{
+		mPlayer.AnimateIdle();
+		return BehaveResult.Success;
+	}
+	
+	public BehaveResult TickIdleAction(Tree sender)
+	{
+		mPlayer.IdleAction();
+		return BehaveResult.Success;
+	}
+	
+	/*
+	 * Attack Branch
+	 */
 	public BehaveResult TickCheckAttackDecorator (Tree sender)
 	{
 		return BehaveResult.Success;
@@ -47,29 +88,32 @@ public class PlayerAI : MonoBehaviour, IAgent {
 	
 	public BehaveResult TickCheckSkillInputAction (Tree sender)
 	{
-		if (mPlayer.SkillCheckInput())
+		if (mPlayer.CheckSkillInput())
 			return BehaveResult.Success;
-			return BehaveResult.Failure;	
+		
+		return BehaveResult.Failure;	
 	}
 	
 	public BehaveResult TickCheckSkillActiveAction (Tree sender)
 	{
 		if (mPlayer.CheckSkillActive())
 			return BehaveResult.Success;
-			return BehaveResult.Failure;
+		
+		return BehaveResult.Failure;
 	}
 	
 	public BehaveResult TickActiveSkillAction (Tree sender)
 	{
-			Debug.Log("Check if a Skill is present");
-			return BehaveResult.Failure;
+		Debug.Log("Check if a Skill is present");
+		return BehaveResult.Failure;
 	}
 	
 	public BehaveResult TickCheckAttackInputAction (Tree sender)
 	{
-		if (mPlayer.AttackCheckInput())
+		if (mPlayer.CheckAttackInput())
 			return BehaveResult.Success;
-			return BehaveResult.Failure;
+		
+		return BehaveResult.Failure;
 	}
 	
 	public BehaveResult TickCheckAttackUsableAction (Tree sender)
@@ -111,7 +155,7 @@ public class PlayerAI : MonoBehaviour, IAgent {
 		return BehaveResult.Failure;
 	}
 	
-	public BehaveResult TickJumpCheckWaitTimeAction (Tree sender)
+	public BehaveResult TickCheckJumpWaitTimeAction (Tree sender)
 	{
 		if (mPlayer.CheckJumpWaitTime())
 			return BehaveResult.Success;

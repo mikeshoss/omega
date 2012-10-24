@@ -9,16 +9,24 @@ public class PlayerScript : MonoBehaviour {
 	private Vector3 mMoveVelocity;
 	private int mCurrentJumpNumber;
 	
-	private bool mJumpPressed;
 	private bool mJumpWait;
 	private bool mJumpMax;
 	private bool mAirborne;
+	
+	/*
+	 * Checks player input
+	 */
+	private bool mJumpPressed;
+	private bool mRunPressed;
 	private bool mSkillPressed;
 	private bool mAttackPressed;
+	
 	private bool mCurrentSkill;
+	private bool mSkillActive;
 	
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		mMoveVelocity = new Vector3(0,0,0);
 		mAirborne = false;
 		mJumpWait = true;
@@ -26,7 +34,10 @@ public class PlayerScript : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
+		mRunPressed = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D);
+	
 		mJumpPressed = Input.GetKey(KeyCode.W);
 		mSkillPressed = Input.GetKey(KeyCode.Alpha1) || 
 						Input.GetKey(KeyCode.Alpha2) || 
@@ -35,19 +46,22 @@ public class PlayerScript : MonoBehaviour {
 		mAttackPressed = Input.GetKey(KeyCode.Space);
 	}
 	
-	
-	
-	void FixedUpdate () {
+	void FixedUpdate ()
+	{
 		ApplyGravity();
 		Move ();
 	}
 	
-	public bool SkillCheckInput ()
+	
+	/*
+	 * Attack Branch
+	 */
+	public bool CheckSkillInput ()
 	{
 		return mSkillPressed;
 	}
 	
-	public bool AttackCheckInput ()
+	public bool CheckAttackInput ()
 	{
 		return mAttackPressed;
 	}
@@ -58,9 +72,20 @@ public class PlayerScript : MonoBehaviour {
 	
 	public bool CheckSkillActive ()
 	{
-		return true;
+		/*
+		 * Needs to check if the selected skill is currently in an active state
+		 */
+		mSkillActive = true;
+		return mSkillActive;
 	}
-		
+	
+	public void Attack()
+	{
+	}
+	
+	/*
+	 * Jump Branch
+	 */
 	public bool CheckJumpInput ()	
 	{
 		return mJumpPressed;
@@ -83,6 +108,51 @@ public class PlayerScript : MonoBehaviour {
 		SetJumpWait(true);
 	}
 	
+	public void JumpAction ()
+	{
+		mAirborne = true;
+		StartCoroutine(CoroutineJumpWaitTime());
+		mMoveVelocity.y = mPlayer.JumpVelocity;
+	}
+	
+	/*
+	 * Run Branch
+	 */
+	public bool CheckRunInput()
+	{
+		return mRunPressed;
+	}
+	
+	public bool AnimateRun()
+	{
+		exSprite ex = GetComponent<exSprite>();
+		if(!ex.spanim.IsPlaying("ninja_run"))
+		ex.spanim.Play("ninja_run");
+		return true;
+	}
+	
+	public void RunAction ()
+	{
+		// apply running action
+	}
+	
+	/*
+	 * Idle Branch
+	 */
+	public bool AnimateIdle()
+	{
+		exSprite ex = GetComponent<exSprite>();
+		if(!ex.spanim.IsPlaying("ninja_land"))
+		ex.spanim.Play("ninja_land");
+		return true;
+	}
+	
+	public void IdleAction ()
+	{
+		// apply idle action	
+	}
+	
+	
 	public bool CheckAirborne ()
 	{
 		if (mAirborne)
@@ -90,13 +160,6 @@ public class PlayerScript : MonoBehaviour {
 			return false;
 		}
 		return true;
-	}
-	
-	public void JumpAction ()
-	{
-		mAirborne = true;
-		StartCoroutine(CoroutineJumpWaitTime());
-		mMoveVelocity.y = mPlayer.JumpVelocity;
 	}
 	
 	public void ApplyGravity ()
@@ -118,7 +181,4 @@ public class PlayerScript : MonoBehaviour {
 		gameObject.transform.Translate(mMoveVelocity);
 	}
 	
-	public void Attack()
-	{
-	}
 }
