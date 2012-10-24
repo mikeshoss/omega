@@ -11,6 +11,7 @@ public class PlayerScript : MonoBehaviour {
 	
 	private bool mJumpPressed;
 	private bool mAirborne;
+	private bool mRunPressed; //Raybeans and Shossauce and ColdHam.
 	
 	// Use this for initialization
 	void Start () {
@@ -22,6 +23,8 @@ public class PlayerScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		mJumpPressed = Input.GetKey(KeyCode.Space);
+		mRunPressed = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D);//Raybeans and Shossauce and ColdHam.
+	
 	}
 	
 	void FixedUpdate () {
@@ -36,6 +39,24 @@ public class PlayerScript : MonoBehaviour {
 		
 	}
 	
+	public bool RunCheckInput(){
+		return mRunPressed;
+	}
+	
+	//check for animate flag.
+	public bool AnimateIdle(){
+		exSprite ex = GetComponent<exSprite>();
+		if(!ex.spanim.IsPlaying("ninja_land"))
+		ex.spanim.Play("ninja_land");
+		return true;
+	}
+	
+	public bool AnimateRun(){
+		exSprite ex = GetComponent<exSprite>();
+		if(!ex.spanim.IsPlaying("ninja_run"))
+		ex.spanim.Play("ninja_run");
+		return true;
+	} 
 	public bool JumpCheckAirborne ()
 	{
 		// if he is not airborne, allow a jump

@@ -40,4 +40,39 @@ public class PlayerAI : MonoBehaviour, IAgent {
 		return BehaveResult.Failure;
 	}
 	
+	//RayROD and ShossBOSS's work here.
+	public BehaveResult TickRunCheckInputAction(Tree sender)
+	{
+		Debug.Log(mPlayer.RunCheckInput());
+		if(mPlayer.RunCheckInput())
+			return BehaveResult.Success;	
+		
+		return BehaveResult.Failure;
+	}
+	
+	public BehaveResult TickRunAction(Tree sender)
+	{
+//		if(mPlayer.JumpCheckInput()){
+//			return BehaveResult.Success;
+//		}
+		return BehaveResult.Failure;
+	}
+	
+	public BehaveResult TickAnimateRunAction(Tree sender)
+	{
+		mPlayer.AnimateRun();
+		return BehaveResult.Success;
+	}
+	
+	public BehaveResult TickAnimateIdleAction(Tree sender)
+	{
+		mPlayer.AnimateIdle();
+		return BehaveResult.Success;
+	}
+	
+	public BehaveResult TickIdleAction(Tree sender)
+	{
+		return BehaveResult.Failure;
+	}
+		
 }
