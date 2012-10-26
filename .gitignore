@@ -1,3 +1,5 @@
+.DS_Store
+Assets/.DS_Store
 Temp/
 obj/
 Assets/ex2D/
@@ -5,10 +7,7 @@ Assets/NGUI/
 Assets/Behave/
 output_Data/
 
-Library/cache
-Library/metadata
-Library/previews
-Library/ScriptAssemblies
+Library/*
 
 Assembly-CSharp-Editor-firstpass-vs.csproj
 Assembly-CSharp-Editor-firstpass.csproj
