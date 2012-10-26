@@ -33,10 +33,10 @@ public class PlayerData {
 	//Jump
 	private const int kJumpMax = 2;
 	private const float kJumpWaitTime = 0.4f; // 0.4 seconds
-	private const float kJumpVelocity = 100.0f; // initial jump velocity
+	private const float kJumpVelocity = 800.0f; // initial jump velocity
 	//Run
-	private const float kRunAccel = 50.0f;
-	private const float kMaxRunSpeed = 500.0f;
+	private const float kRunAccel = 50000.0f;
+	private const float kMaxRunSpeed = 800.0f;
 	//Health
 	private const float kBaseHealth = 95.0f; 
 	private const float kHealthIncrement = 5.0f; // 5 percent

@@ -2,15 +2,8 @@ Library class:
 BLBehaveLib
 
 Trees:
-	AI_EnemyGround
-	AI_Player
-	AI_EnemyAir
-	AI_PlayerJump
-	AI_PlayerRun
-	AI_PlayerIdle
-	AI_PlayerAttack
-	Player_PlayerAI
 	Player_Playertree
+	Player_PlayerTest
 	Unknown
 
 Contexts:
@@ -19,45 +12,34 @@ Contexts:
 Branch priority groups:
 	Unknown
 
-Actions (33: 1 - 34):
-	JumpInput (1)
-	JumpAnimate (2)
-	Jump (3)
-	JumpWait (4)
-	JumpMax (5)
-	RunInput (6)
-	RunAnimate (7)
-	Run (8)
-	IdleCheck (9)
-	IdleAnimate (10)
-	Idle (11)
-	AttackDelay (12)
-	AttackInput (13)
-	AttackAnimate (14)
-	AttackSpawn (15)
-	JumpCheckInput (16)
-	RunCheck (17)
-	JumpCheckAirborne (18)
-	CheckSkillInput (19)
-	ActiveSkill (20)
-	CheckAttackInput (21)
-	CheckAttackUsable (22)
-	CheckJumpInput (23)
-	CheckAirborne (24)
-	CheckJumpWaitTime (25)
-	CheckMaxJump (26)
-	RunCheckInput (27)
-	AnimateJump (28)
-	AnimateRun (29)
-	AnimateAttack (30)
-	Attack (31)
-	AnimateIdle (32)
-	CheckSkillActive (33)
-	Unknown (34)
+Actions (22: 1 - 23):
+	CheckSkillInput (1)
+	ActiveSkill (2)
+	CheckAttackInput (3)
+	CheckAttackUsable (4)
+	CheckJumpInput (5)
+	CheckJumpWaitTime (6)
+	CheckJumpMax (7)
+	CheckRunInput (8)
+	Jump (9)
+	AnimateJump (10)
+	Run (11)
+	AnimateRun (12)
+	Idle (13)
+	AnimateAttack (14)
+	Attack (15)
+	AnimateIdle (16)
+	CheckSkillExists (17)
+	IsDead (18)
+	Dead (19)
+	ShouldDie (20)
+	Die (21)
+	AnimateDie (22)
+	Unknown (23)
 
-Decorators (2: 35 - 37):
-	CheckRequestingAttack (35)
-	CheckAttack (36)
-	Unknown (37)
+Decorators (2: 24 - 26):
+	GameRunning (24)
+	NotAirborne (25)
+	Unknown (26)
 
 Agent classes:
