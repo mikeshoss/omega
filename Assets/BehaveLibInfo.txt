@@ -2,8 +2,8 @@ Library class:
 BLBehaveLib
 
 Trees:
-	Player_Playertree
-	Player_PlayerTest
+	AI_Player
+	AI_Enemy
 	Unknown
 
 Contexts:
