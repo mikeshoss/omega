@@ -99,8 +99,14 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	}
 	public BehaveResult TickDieAction (Tree sender)
 	{
+		mEnemy.DieAction();
+		
+		if (mEnemy.IsDead())
+			return BehaveResult.Success;
+		
 		return BehaveResult.Running;	
 	}
+	
 	
 	/*
 	 * ALIVE
@@ -110,8 +116,13 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickIsAliveAction (Tree sender)
 	{
-		return BehaveResult.Success;
+		if (mEnemy.IsAlive())
+			return BehaveResult.Success;
+		
+		return BehaveResult.Failure;
 	}
+	
+	//TODO:
 	
 	/*
 	 * ACTION
@@ -124,6 +135,8 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickIsHostileAction (Tree sender)
 	{
+		if (mEnemy.IsHostile())
+			return BehaveResult.Success;
 		return BehaveResult.Failure;	
 	}
 	
@@ -135,10 +148,16 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickIsSkillSelectedAction (Tree sender)
 	{
+		if (mEnemy.IsSkillSelected())
+			return BehaveResult.Success;
+		
 		return BehaveResult.Failure;	
 	}
 	public BehaveResult TickIsInRangeAction (Tree sender)
 	{
+		if (mEnemy.IsEnemyInRange())
+			return BehaveResult.Success;
+		
 		return BehaveResult.Failure;
 	}
 	/*
@@ -146,10 +165,12 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickAnimateAttackAction (Tree sender)
 	{
+		mEnemy.AnimateAttack();
 		return BehaveResult.Success;
 	}
 	public BehaveResult TickAttackAction (Tree sender)
 	{	
+		mEnemy.AttackAction();
 		return BehaveResult.Success;
 	}
 	
@@ -165,6 +186,7 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickSelectSkillAction (Tree sender)
 	{
+		mEnemy.SelectSkill();
 		return BehaveResult.Success;
 	}
 	
@@ -176,6 +198,9 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickIsSeekingAction (Tree sender)
 	{
+		if (mEnemy.IsSeeking())
+			return BehaveResult.Success;
+
 		return BehaveResult.Failure;	
 	}
 	/*
@@ -183,18 +208,22 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickSetDesiredSeekLocationAction (Tree sender)
 	{
+		mEnemy.SetDesiredSeekLocation();
 		return BehaveResult.Success;	
 	}
 	public BehaveResult TickFindPathAction(Tree sender)
 	{
+		mEnemy.FindPath();
 		return BehaveResult.Success;
 	}
 	public BehaveResult TickAnimateSeekAction(Tree sender)
 	{
+		mEnemy.AnimateSeek();
 		return BehaveResult.Success;
 	}
 	public BehaveResult TickSeekAction(Tree sender)
 	{
+		mEnemy.SeekAction();
 		return BehaveResult.Success;
 	}
 	
@@ -204,15 +233,12 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	/*
 	 * Conditions
 	 */
-	public BehaveResult TickIsWanderingAction (Tree sender)
-	{
-		return BehaveResult.Failure;
-	}
 	/*
 	 * Actions
 	 */
 	public BehaveResult TickSetDesiredWanderLocationAction (Tree sender)
 	{	
+		mEnemy.SetDesiredWanderLocation();
 		return BehaveResult.Success;
 	}
 	/*
@@ -220,11 +246,22 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickAnimateWanderAction (Tree sender)
 	{
+		mEnemy.AnimateWander();
 		return BehaveResult.Success;
 	}
 	public BehaveResult TickWanderAction (Tree sender)
 	{
-		return BehaveResult.Success;
+		mEnemy.WanderAction();
+		
+		if (!mEnemy.IsWandering()) {
+			return BehaveResult.Success;
+		}
+		if (mEnemy.IsHostile())
+		{
+			mEnemy.IdleAction();
+			return BehaveResult.Failure;	
+		}
+		return BehaveResult.Running;
 	}
 	
 	/*
@@ -238,10 +275,20 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickAnimateIdleAction(Tree sender)
 	{
+		mEnemy.AnimateIdle();
 		return BehaveResult.Success;
 	}
 	public BehaveResult TickIdleAction(Tree sender)
 	{
-		return BehaveResult.Success;
+		mEnemy.IdleAction();
+		
+		if (!mEnemy.IsIdle()) {
+			return BehaveResult.Success;
+		}
+		if (mEnemy.IsHostile())
+		{
+			return BehaveResult.Failure;	
+		}
+		return BehaveResult.Running;
 	}
 }
