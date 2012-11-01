@@ -12,7 +12,7 @@ Contexts:
 Branch priority groups:
 	Unknown
 
-Actions (36: 1 - 37):
+Actions (38: 1 - 39):
 	CheckSkillInput (1)
 	ActiveSkill (2)
 	CheckAttackInput (3)
@@ -49,11 +49,13 @@ Actions (36: 1 - 37):
 	SetDesiredSeekLocation (34)
 	AnimateSeek (35)
 	IsSkillSelected (36)
-	Unknown (37)
+	WanderInit (37)
+	IdleInit (38)
+	Unknown (39)
 
-Decorators (2: 38 - 40):
-	GameRunning (38)
-	NotAirborne (39)
-	Unknown (40)
+Decorators (2: 40 - 42):
+	GameRunning (40)
+	NotAirborne (41)
+	Unknown (42)
 
 Agent classes:

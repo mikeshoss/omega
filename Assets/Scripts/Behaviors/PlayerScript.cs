@@ -36,7 +36,7 @@ public class PlayerScript : MonoBehaviour {
 		mPlayer = new PlayerData(1, null, null);
 		mCharacter = GetComponent<CharacterController>();
 		mMoveVelocity = new Vector3(0,0,0);
-		mAirborne = false;
+		mAirborne = true;
 		mJumpWait = true;
 		mCurrentJump = 0;
 		mCurrentRunDir = 1;
@@ -67,6 +67,7 @@ public class PlayerScript : MonoBehaviour {
 	
 	void FixedUpdate ()
 	{
+		CheckGrounded();
 		ApplyGravity();
 		ApplyFriction();
 		Move ();
@@ -231,32 +232,54 @@ public class PlayerScript : MonoBehaviour {
 			{
 				mMoveVelocity.x -= kFriction * Time.deltaTime;
 				if (mMoveVelocity.x < 0)
-				{
 					mMoveVelocity.x = 0;	
-				}
 			}
 			
 			if (mCurrentRunDir < 0)
 			{
 				mMoveVelocity.x += kFriction * Time.deltaTime;
 				if (mMoveVelocity.x > 0)
-				{
-					mMoveVelocity.x = 0;	
-				}
+					mMoveVelocity.x = 0;
 			}
 		}
 	}
 	
-	public void Move()
+	public void Move ()
 	{
 		mCharacter.Move(mMoveVelocity * Time.deltaTime);
 	}
 	
+	private void CheckGrounded ()
+	{
+		RaycastHit hit;
+		Vector3 down = transform.TransformDirection(-Vector3.up);
+		float height = mCharacter.height;
+
+		Vector3 pos = transform.position;
+
+		pos.y -= (height / 2.0f) * transform.localScale.y - 5;
+		pos.x -= mCharacter.radius;
+
+		RaycastHit hit2;
+
+		Vector3 pos2 = transform.position;
+
+		pos2.y -= (height / 2.0f) * transform.localScale.y - 5;
+		pos2.x += mCharacter.radius;
+
+        mAirborne = !Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 10);
+		
+		Vector3 debugVector = mMoveVelocity;
+		debugVector.y = debugVector.y * Time.deltaTime + 10;
+		
+		Debug.DrawRay(pos, debugVector * Time.deltaTime, Color.red);
+		Debug.DrawRay(pos2, debugVector * Time.deltaTime, Color.red);
+	}
+	
 	public void OnControllerColliderHit (ControllerColliderHit hit)
 	{
-		Debug.Log(hit.gameObject.tag);
-
-		if (hit.gameObject.tag == "Ground" && mCharacter.collisionFlags == CollisionFlags.Below)
+		int terrainLayer = LayerMask.NameToLayer("Terrain");
+		if (hit.gameObject.layer == terrainLayer && mCharacter.collisionFlags == CollisionFlags.Below)
 		{
 			mMoveVelocity.y = 0;
 			mAirborne = false;
@@ -264,12 +287,12 @@ public class PlayerScript : MonoBehaviour {
 		}
 
 		// If player hits a wall, set x velocity to 0.
-		if (hit.gameObject.tag == "Ground" && mCharacter.collisionFlags == CollisionFlags.Sides)
+		if (hit.gameObject.layer == terrainLayer && mCharacter.collisionFlags == CollisionFlags.Sides)
 		{
 			mMoveVelocity.x = 0;
 		}
 		// If head hits the top of a terrain, bounce back down
-		if (hit.gameObject.tag == "Ground" && mCharacter.collisionFlags == CollisionFlags.CollidedAbove)
+		if (hit.gameObject.layer == terrainLayer && mCharacter.collisionFlags == CollisionFlags.CollidedAbove)
 		{
 			mMoveVelocity.y = 0;	
 		}

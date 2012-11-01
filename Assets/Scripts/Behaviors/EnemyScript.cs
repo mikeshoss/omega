@@ -18,15 +18,21 @@ public class EnemyScript : MonoBehaviour {
 	private bool mIsSeeking;
 	private bool mIsWandering;
 	private bool mIsIdle;
+	private bool mIsAttacking;
+	private bool mIsAirborne;
 	
 	private bool mWanderSucceeded;
 	private bool mIdleSucceeded;
 	
+	private int mDirection;
+	private int mDesiredDirection;
 	private float mHorizontalSeeingRange;
 	private float mVerticalSeeingRange;
 	
 	private Vector3 mDesiredLocation;
 	private Vector3 mMoveVelocity;
+	
+	private const float kGravity = 1700.0f;
 	
 	// Use this for initialization
 	void Start () {
@@ -40,10 +46,13 @@ public class EnemyScript : MonoBehaviour {
 		mIsSeeking = false;
 		mIsWandering = false;
 		mIsIdle = true;
+		mIsAttacking = true;
+		mIsAirborne = true;
 		
 		mWanderSucceeded = false;
 		mIdleSucceeded = false;
 		
+		mDirection = 1;
 		mHorizontalSeeingRange = 700.0f;
 		mVerticalSeeingRange = 200.0f;
 		
@@ -62,6 +71,8 @@ public class EnemyScript : MonoBehaviour {
 	void FixedUpdate () {
 		if (!mIsDead)
 		{
+			CheckGrounded ();
+			ApplyGravity ();
 			CheckHostile ();
 			CheckEnemyInRange ();
 			Move ();
@@ -119,7 +130,6 @@ public class EnemyScript : MonoBehaviour {
 	{
 		
 		GameObject player = GameObject.FindGameObjectWithTag("Character");
-		//Debug.Log ("Players X coordinate" + player.transform.position.x);
 		
 		mIsHostile = false;
 		
@@ -130,7 +140,6 @@ public class EnemyScript : MonoBehaviour {
 	}
 	public bool IsHostile ()
 	{
-		Debug.Log ("Hostile?: " + mIsHostile);
 		return mIsHostile;	
 	}
 	
@@ -139,15 +148,15 @@ public class EnemyScript : MonoBehaviour {
 	 */
 	public bool IsSkillSelected ()
 	{
-		if (mSelectedSkill == null)
-			return false;
+		//if (mSelectedSkill == null)
+		//	return false;
 		
 		return true;
 	}
 	void CheckEnemyInRange ()
 	{
 		mIsEnemyInRange = false;
-		if (mIsHostile)	
+		if (mIsHostile)
 		{
 			//TODO:
 			// use skills attack range to decide if attack will attack
@@ -160,7 +169,13 @@ public class EnemyScript : MonoBehaviour {
 	}
 	public void AnimateAttack ()
 	{
-		
+	}
+	IEnumerator CoroutineAttack ()
+	{
+		mIsAttacking = true;
+		yield return new WaitForSeconds(1.0f);
+		mIsAttacking = false;
+		StopCoroutine("CoroutineAttack");
 	}
 	public void AttackAction ()
 	{
@@ -173,6 +188,7 @@ public class EnemyScript : MonoBehaviour {
 	public void SelectSkill ()
 	{
 		// Depending on the enemies stats, select the best possible skill
+		mSelectedSkill = null;
 	}
 
 	/*
@@ -213,17 +229,14 @@ public class EnemyScript : MonoBehaviour {
 	{
 		// random path node in the area of the enemy
 		float x = Random.Range(-5, 5);
-		
-		if (x <= 0)
-		{
-			mMoveVelocity.x = -300.0f;	
+		if (x <= 0) {
+			mDesiredDirection = -1;
 		} else {
-			mMoveVelocity.x = 300.0f;	
+			mDesiredDirection = 1;
 		}
 	}
 	public void AnimateWander ()
 	{
-		StartCoroutine("CoroutineWanderTime");
 	}
 	IEnumerator CoroutineWanderTime ()
 	{
@@ -232,9 +245,39 @@ public class EnemyScript : MonoBehaviour {
 		mIsWandering = false;
 		StopCoroutine("CoroutineWanderTime");
 	}
+	public void WanderInit ()
+	{
+		StartCoroutine("CoroutineWanderTime");	
+	}
+	
 	public void WanderAction ()
 	{
-		Debug.Log("Wander Action");
+		if (IsEndOfPlatform())
+		{
+			Debug.Log ("End of Platform");
+			mIsWandering = false;
+			mMoveVelocity.x = 0;
+			return;
+		}
+		
+		// Move along path to the node
+		Vector3 scale = gameObject.transform.localScale;
+		scale.x = Mathf.Abs(scale.x);
+		
+		mMoveVelocity.x = mDesiredDirection * mEnemy.MaxWanderSpeed;
+		
+		if (mMoveVelocity.x > 0)
+		{
+			mDirection = 1;
+			scale.x *= 1;
+		}
+		else if (mMoveVelocity.x < 0)
+		{
+			mDirection = -1;
+			scale.x *= -1;
+		}
+		gameObject.transform.localScale = scale;
+
 	}
 
 	/*
@@ -246,7 +289,6 @@ public class EnemyScript : MonoBehaviour {
 	}
 	public void AnimateIdle ()
 	{	
-		StartCoroutine("CoroutineIdleTime");
 	}
 	IEnumerator CoroutineIdleTime ()
 	{
@@ -255,15 +297,101 @@ public class EnemyScript : MonoBehaviour {
 		mIsIdle = false;
 		StopCoroutine("CoroutineIdleTime");
 	}
+	public void IdleInit ()
+	{
+		StartCoroutine("CoroutineIdleTime");	
+	}
 	public void IdleAction ()
 	{
-		Debug.Log("Idle Action");
 		mMoveVelocity = new Vector3(0,0,0);
+	}
+	
+	private void ApplyGravity ()
+	{
+		if (mIsAirborne)
+		{
+			mMoveVelocity.y -= kGravity * Time.deltaTime;
+		}
+	}
+	
+	private void CheckGrounded ()
+	{
+		RaycastHit hit;
+		Vector3 down = transform.TransformDirection(-Vector3.up);
+		float height = mCharacter.height;
+
+		Vector3 pos = transform.position;
+
+		pos.y -= (height / 2.0f) * transform.localScale.y - 5;
+		pos.x -= mCharacter.radius;
+
+		RaycastHit hit2;
+
+		Vector3 pos2 = transform.position;
+
+		pos2.y -= (height / 2.0f) * transform.localScale.y - 5;
+		pos2.x += mCharacter.radius;
+
+        mIsAirborne = (!Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 10) && !Physics.Raycast(pos, down, out hit2, mMoveVelocity.y * Time.deltaTime + 10));
+		
+		Vector3 debugVector = mMoveVelocity;
+		debugVector.y = debugVector.y * Time.deltaTime + 10;
+		
+		Debug.DrawRay(pos, debugVector * Time.deltaTime, Color.red);
+		Debug.DrawRay(pos2, debugVector * Time.deltaTime, Color.red);
+	}
+	
+	private bool IsEndOfPlatform ()
+	{
+		RaycastHit hit;
+		Vector3 down = transform.TransformDirection(-Vector3.up);
+		float height = mCharacter.height;
+
+		Vector3 pos = transform.position;
+
+		pos.y -= (height / 2.0f) * transform.localScale.y - 5;
+		pos.x -= mCharacter.radius * 1.5f;
+
+		RaycastHit hit2;
+
+		Vector3 pos2 = transform.position;
+
+		pos2.y -= (height / 2.0f) * transform.localScale.y - 5;
+		pos2.x += mCharacter.radius * 1.5f;
+		
+		Vector3 debugVector = mMoveVelocity;
+		debugVector.y = debugVector.y * Time.deltaTime + 10;
+		
+		Debug.DrawRay(pos, new Vector3(0, -100, 0), Color.yellow);
+		Debug.DrawRay(pos2, new Vector3(0, -100, 0), Color.yellow);
+		
+        return (!Physics.Raycast(pos2, down, out hit2, 100) || !Physics.Raycast(pos, down, out hit2, 100));
+		
+	}
+	
+	public void OnControllerColliderHit (ControllerColliderHit hit)
+	{
+		int terrainLayer = LayerMask.NameToLayer("Terrain");
+		
+		if (hit.gameObject.layer == terrainLayer && mCharacter.collisionFlags == CollisionFlags.Below)
+		{
+			mMoveVelocity.y = 0;
+			mIsAirborne = false;
+		}
+		// If player hits a wall, set x velocity to 0.
+		if (hit.gameObject.layer == terrainLayer && mCharacter.collisionFlags == CollisionFlags.Sides)
+		{
+			mMoveVelocity.x = 0;
+		}
+		// If head hits the top of a terrain, bounce back down
+		if (hit.gameObject.layer == terrainLayer && mCharacter.collisionFlags == CollisionFlags.CollidedAbove)
+		{
+			mMoveVelocity.y = 0;	
+		}
 	}
 	
 	void Move()
 	{
 		mCharacter.Move (mMoveVelocity * Time.deltaTime);
 	}
-	
 }

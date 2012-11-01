@@ -29,6 +29,9 @@ public class EnemyData {
 	//Run
 	private const float kRunAccel = 50.0f;
 	private const float kMaxRunSpeed = 500.0f;
+	//Wander
+	private const float kWanderAccel = 50.0f;
+	private const float kMaxWanderSpeed = 200.0f;
 	//Health
 	private const float kBaseHealth = 95.0f; 
 	private const float kHealthIncrement = 5.0f; // 5 percent
@@ -122,6 +125,22 @@ public class EnemyData {
 		get
 		{
 			return kMaxRunSpeed;	
+		}
+	}
+	
+	public float WanderAcceleration
+	{
+		get
+		{
+			return kWanderAccel;
+		}
+	}
+
+	public float MaxWanderSpeed
+	{
+		get
+		{
+			return kMaxWanderSpeed;	
 		}
 	}
 

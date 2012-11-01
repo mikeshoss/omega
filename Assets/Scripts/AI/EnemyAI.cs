@@ -174,7 +174,6 @@ public class EnemyAI : MonoBehaviour, IAgent {
 		return BehaveResult.Success;
 	}
 	
-	
 	/*
 	 * SKILL
 	 */
@@ -249,10 +248,13 @@ public class EnemyAI : MonoBehaviour, IAgent {
 		mEnemy.AnimateWander();
 		return BehaveResult.Success;
 	}
+	public BehaveResult TickWanderInitAction (Tree sender)
+	{
+		mEnemy.WanderInit();
+		return BehaveResult.Success;
+	}
 	public BehaveResult TickWanderAction (Tree sender)
 	{
-		mEnemy.WanderAction();
-		
 		if (!mEnemy.IsWandering()) {
 			return BehaveResult.Success;
 		}
@@ -261,6 +263,8 @@ public class EnemyAI : MonoBehaviour, IAgent {
 			mEnemy.IdleAction();
 			return BehaveResult.Failure;	
 		}
+		
+		mEnemy.WanderAction();
 		return BehaveResult.Running;
 	}
 	
@@ -278,9 +282,13 @@ public class EnemyAI : MonoBehaviour, IAgent {
 		mEnemy.AnimateIdle();
 		return BehaveResult.Success;
 	}
-	public BehaveResult TickIdleAction(Tree sender)
+	public BehaveResult TickIdleInitAction (Tree sender)
 	{
-		mEnemy.IdleAction();
+		mEnemy.IdleInit();
+		return BehaveResult.Success;
+	}
+	public BehaveResult TickIdleAction (Tree sender)
+	{
 		
 		if (!mEnemy.IsIdle()) {
 			return BehaveResult.Success;
@@ -289,6 +297,8 @@ public class EnemyAI : MonoBehaviour, IAgent {
 		{
 			return BehaveResult.Failure;	
 		}
+		
+		mEnemy.IdleAction();
 		return BehaveResult.Running;
 	}
 }
