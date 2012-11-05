@@ -11,7 +11,7 @@ public class PlayerAI : MonoBehaviour, IAgent {
 	IEnumerator Start ()
 	{
 		mPlayer = (PlayerScript)GetComponent<PlayerScript>();
-		tree = BLBehaveLib.InstantiateTree(BLBehaveLib.TreeType.Player_Playertree, this);
+		tree = BLBehaveLib.InstantiateTree(BLBehaveLib.TreeType.AI_Player, this);
 		
 		while (Application.isPlaying && tree != null)
 		{

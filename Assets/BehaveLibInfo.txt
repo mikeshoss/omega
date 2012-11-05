@@ -2,8 +2,8 @@ Library class:
 BLBehaveLib
 
 Trees:
-	Player_Playertree
-	Player_PlayerTest
+	AI_Player
+	AI_Enemy
 	Unknown
 
 Contexts:
@@ -12,7 +12,7 @@ Contexts:
 Branch priority groups:
 	Unknown
 
-Actions (22: 1 - 23):
+Actions (38: 1 - 39):
 	CheckSkillInput (1)
 	ActiveSkill (2)
 	CheckAttackInput (3)
@@ -35,11 +35,27 @@ Actions (22: 1 - 23):
 	ShouldDie (20)
 	Die (21)
 	AnimateDie (22)
-	Unknown (23)
+	IsDying (23)
+	IsHostile (24)
+	SelectSkill (25)
+	IsInRage (26)
+	IsSeeking (27)
+	Seek (28)
+	SetDesiredWanderLocation (29)
+	Wander (30)
+	AnimateWander (31)
+	IsAlive (32)
+	FindPath (33)
+	SetDesiredSeekLocation (34)
+	AnimateSeek (35)
+	IsSkillSelected (36)
+	WanderInit (37)
+	IdleInit (38)
+	Unknown (39)
 
-Decorators (2: 24 - 26):
-	GameRunning (24)
-	NotAirborne (25)
-	Unknown (26)
+Decorators (2: 40 - 42):
+	GameRunning (40)
+	NotAirborne (41)
+	Unknown (42)
 
 Agent classes:
