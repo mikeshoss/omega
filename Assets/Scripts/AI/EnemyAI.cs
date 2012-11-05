@@ -189,42 +189,6 @@ public class EnemyAI : MonoBehaviour, IAgent {
 		return BehaveResult.Success;
 	}
 	
-	/*
-	 * SEEK
-	 */
-	/*
-	 * Conditions
-	 */
-	public BehaveResult TickIsSeekingAction (Tree sender)
-	{
-		if (mEnemy.IsSeeking())
-			return BehaveResult.Success;
-
-		return BehaveResult.Failure;	
-	}
-	/*
-	 * Actions
-	 */
-	public BehaveResult TickSetDesiredSeekLocationAction (Tree sender)
-	{
-		mEnemy.SetDesiredSeekLocation();
-		return BehaveResult.Success;	
-	}
-	public BehaveResult TickFindPathAction(Tree sender)
-	{
-		mEnemy.FindPath();
-		return BehaveResult.Success;
-	}
-	public BehaveResult TickAnimateSeekAction(Tree sender)
-	{
-		mEnemy.AnimateSeek();
-		return BehaveResult.Success;
-	}
-	public BehaveResult TickSeekAction(Tree sender)
-	{
-		mEnemy.SeekAction();
-		return BehaveResult.Success;
-	}
 	
 	/*
 	 * WANDER
@@ -235,9 +199,9 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	/*
 	 * Actions
 	 */
-	public BehaveResult TickSetDesiredWanderLocationAction (Tree sender)
+	public BehaveResult TickSetWanderDirectionAction (Tree sender)
 	{	
-		mEnemy.SetDesiredWanderLocation();
+		mEnemy.SetWanderDirection();
 		return BehaveResult.Success;
 	}
 	/*
@@ -255,6 +219,8 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	}
 	public BehaveResult TickWanderAction (Tree sender)
 	{
+		mEnemy.WanderAction();
+		
 		if (!mEnemy.IsWandering()) {
 			return BehaveResult.Success;
 		}
@@ -264,7 +230,6 @@ public class EnemyAI : MonoBehaviour, IAgent {
 			return BehaveResult.Failure;	
 		}
 		
-		mEnemy.WanderAction();
 		return BehaveResult.Running;
 	}
 	

@@ -267,7 +267,8 @@ public class PlayerScript : MonoBehaviour {
 		pos2.y -= (height / 2.0f) * transform.localScale.y - 5;
 		pos2.x += mCharacter.radius/ 5.0f;
 
-        mAirborne = !Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 10);
+        mAirborne = (!Physics.Raycast(pos, down, out hit, mMoveVelocity.y * Time.deltaTime + 10) && 
+					!Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 10));
 		
 		Vector3 debugVector = mMoveVelocity;
 		debugVector.y = debugVector.y * Time.deltaTime + 10;
