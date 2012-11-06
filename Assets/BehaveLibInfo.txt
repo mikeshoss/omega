@@ -13,7 +13,7 @@ Contexts:
 Branch priority groups:
 	Unknown
 
-Actions (41: 1 - 42):
+Actions (35: 1 - 36):
 	CheckSkillInput (1)
 	ActiveSkill (2)
 	CheckAttackInput (3)
@@ -39,27 +39,21 @@ Actions (41: 1 - 42):
 	IsDying (23)
 	IsHostile (24)
 	SelectSkill (25)
-	IsInRage (26)
-	IsSeeking (27)
-	Seek (28)
-	SetDesiredWanderLocation (29)
-	Wander (30)
-	AnimateWander (31)
-	IsAlive (32)
-	FindPath (33)
-	SetDesiredSeekLocation (34)
-	AnimateSeek (35)
-	IsSkillSelected (36)
-	WanderInit (37)
-	IdleInit (38)
-	Startup (39)
-	Active (40)
-	End (41)
-	Unknown (42)
+	SetWanderDirection (26)
+	Wander (27)
+	AnimateWander (28)
+	IsAlive (29)
+	IsSkillSelected (30)
+	IdleInit (31)
+	IsAttackCooling (32)
+	Startup (33)
+	Active (34)
+	End (35)
+	Unknown (36)
 
-Decorators (2: 43 - 45):
-	GameRunning (43)
-	NotAirborne (44)
-	Unknown (45)
+Decorators (2: 37 - 39):
+	GameRunning (37)
+	NotAirborne (38)
+	Unknown (39)
 
 Agent classes:

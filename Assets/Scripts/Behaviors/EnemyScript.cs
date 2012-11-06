@@ -9,8 +9,8 @@ public class EnemyScript : MonoBehaviour {
 	private EnemyData mEnemy;
 	private exSprite mSprite;
 	public List<GameObject> mPath;
-	private Skill mCurrentSkill;
-
+	private List<Skill> mSelectedSkills;
+	
 	private Vector3 mMoveVelocity;
 	
 	private float mHealth;
@@ -21,14 +21,15 @@ public class EnemyScript : MonoBehaviour {
 	private int mCurrentNode;
 	private int mNextNode;
 	private int mDirection;
+	private int mSelectedSkill;
 	
 	private bool mIsDead; 
 	private bool mIsHostile;
-	private bool mIsEnemyInRange;
 	private bool mIsWandering;
 	private bool mIsIdle;
 	private bool mIsAttacking;
 	private bool mIsAirborne;
+	private bool[] mIsSkillCooling = new bool[4];
 	
 	private const float kGravity = 			1700.0f;
 	private const float kMinNodeDistance = 	100.0f;
@@ -38,6 +39,10 @@ public class EnemyScript : MonoBehaviour {
 		mCharacter = 		(CharacterController)GetComponent<CharacterController>();
 		mEnemy = 			new EnemyData(1, null);
 		mSprite = 			(exSprite)GetComponent<exSprite>();
+		mSelectedSkills = 	new List<Skill>();
+		Skill icepick = 	new Skill(1,"Icepick", "Cold pick", 1, 10, 50, 500, "", 0, 0, false, 0.8f, 0, "Icepick");
+		mSelectedSkills.Add(icepick);
+		mSelectedSkill = 	0;
 		mCurrentNode = 		0;
 		
 		if (mPath.Count > 1) {
@@ -46,15 +51,13 @@ public class EnemyScript : MonoBehaviour {
 			mNextNode = 0;
 		}
 		
-		mCurrentSkill = 	null;
 		mMoveVelocity = 	new Vector3(0,0,0);
 		mHealth = 			mEnemy.MaxHealth;
 		mEnergy = 			mEnemy.MaxEnergy;
 		mXViewRange = 		700.0f;
-		mYViewRange = 		200.0f;
+		mYViewRange = 		300.0f;
 		mIsDead = 			false;
 		mIsHostile = 		false;
-		mIsEnemyInRange = 	false;
 		mIsWandering = 		false;
 		mIsIdle = 			true;
 		mIsAttacking = 		true;
@@ -73,8 +76,7 @@ public class EnemyScript : MonoBehaviour {
 		{
 			CheckGrounded ();
 			ApplyGravity ();
-			//CheckHostile ();
-			CheckEnemyInRange ();
+			CheckHostile ();
 			Move ();
 		}
 	}
@@ -130,8 +132,11 @@ public class EnemyScript : MonoBehaviour {
 	{
 		
 		GameObject player = GameObject.FindGameObjectWithTag("Character");
-		mIsHostile = 	(player.transform.position.x - mXViewRange <= transform.position.x && 
-						transform.position.x <= player.transform.position.x + mXViewRange);
+		mIsHostile = 	((player.transform.position.x - mXViewRange <= transform.position.x && 
+						transform.position.x <= player.transform.position.x + mXViewRange) &&
+						(player.transform.position.y - mYViewRange <= transform.position.y &&
+						transform.position.y <= player.transform.position.y + mYViewRange));
+		
 	}
 	public bool IsHostile ()
 	{
@@ -146,24 +151,24 @@ public class EnemyScript : MonoBehaviour {
 		//TODO
 		return true;
 	}
-	void CheckEnemyInRange ()
+	
+	public bool IsAttackCooling ()
 	{
-		//TODO
+		Debug.Log ("Check Attack cooling: " + mIsSkillCooling[mSelectedSkill]);
+		return mIsSkillCooling[mSelectedSkill];	
 	}
-	public bool IsEnemyInRange ()
-	{
-		return mIsEnemyInRange;	
-	}
+	
 	public void AnimateAttack ()
 	{
 		//TODO
+		StartCoroutine("CoroutineAttack");
 	}
 	IEnumerator CoroutineAttack ()
 	{
-		mIsAttacking = true;
-		yield return new WaitForSeconds(1.0f); //Change
-		mIsAttacking = false;
-		StopCoroutine("CoroutineAttack");
+		mIsSkillCooling[mSelectedSkill] = true;
+		float delay = mSelectedSkills[mSelectedSkill].SkillDelay;
+		yield return new WaitForSeconds(delay);
+		mIsSkillCooling[mSelectedSkill] = false;
 	}
 	public void AttackAction ()
 	{
@@ -177,7 +182,6 @@ public class EnemyScript : MonoBehaviour {
 	{
 		//TODO
 		// Depending on the enemies stats, select the best possible skill
-		mCurrentSkill = null;
 	}
 	
 	/*
@@ -208,9 +212,6 @@ public class EnemyScript : MonoBehaviour {
 	public void AnimateWander ()
 	{
 	}
-	public void WanderInit ()
-	{
-	}
 	
 	public void WanderAction ()
 	{
@@ -218,10 +219,15 @@ public class EnemyScript : MonoBehaviour {
 		if (Mathf.Abs(Vector3.Distance(transform.position, mPath[mNextNode].transform.position)) < kMinNodeDistance)
 		{
 			mIsWandering = false;
-			if (++mNextNode >= mPath.Count)
+			if (++mNextNode >= mPath.Count) {
 				mNextNode = 0;
+				mMoveVelocity.x = 0;
+			}
 		}
-		mMoveVelocity.x = mDirection * mEnemy.MaxWanderSpeed;
+		if (mIsWandering)
+			mMoveVelocity.x = mDirection * mEnemy.MaxWanderSpeed;
+		
+		mCharacter.Move (mMoveVelocity * Time.deltaTime);
 	}
 
 	/*
@@ -239,7 +245,6 @@ public class EnemyScript : MonoBehaviour {
 		mIsIdle = true;
 		yield return new WaitForSeconds(kNodeWaitTime);
 		mIsIdle = false;
-		StopCoroutine("CoroutineIdleTime");
 	}
 	public void IdleInit ()
 	{
@@ -309,6 +314,6 @@ public class EnemyScript : MonoBehaviour {
 	
 	void Move()
 	{
-		mCharacter.Move (mMoveVelocity * Time.deltaTime);
+		//mCharacter.Move (mMoveVelocity * Time.deltaTime);
 	}
 }

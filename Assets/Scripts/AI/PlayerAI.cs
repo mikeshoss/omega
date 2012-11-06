@@ -129,7 +129,10 @@ public class PlayerAI : MonoBehaviour, IAgent {
 	public BehaveResult TickCheckAttackUsableAction (Tree sender)
 	{
 		Debug.Log("Check if Attack is Usable");
-		mPlayer.CheckAttackCooldown();
+		if (mPlayer.CheckAttackCooldown())
+		{
+			return BehaveResult.Success;
+		}
 		return BehaveResult.Failure;
 	}
 	/*

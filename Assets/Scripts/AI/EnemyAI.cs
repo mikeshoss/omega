@@ -153,12 +153,11 @@ public class EnemyAI : MonoBehaviour, IAgent {
 		
 		return BehaveResult.Failure;	
 	}
-	public BehaveResult TickIsInRangeAction (Tree sender)
+	public BehaveResult TickIsAttackCoolingAction (Tree sender)
 	{
-		if (mEnemy.IsEnemyInRange())
-			return BehaveResult.Success;
-		
-		return BehaveResult.Failure;
+		if (mEnemy.IsAttackCooling())
+			return BehaveResult.Failure;
+		return BehaveResult.Success;
 	}
 	/*
 	 * Actions
@@ -210,11 +209,6 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	public BehaveResult TickAnimateWanderAction (Tree sender)
 	{
 		mEnemy.AnimateWander();
-		return BehaveResult.Success;
-	}
-	public BehaveResult TickWanderInitAction (Tree sender)
-	{
-		mEnemy.WanderInit();
 		return BehaveResult.Success;
 	}
 	public BehaveResult TickWanderAction (Tree sender)

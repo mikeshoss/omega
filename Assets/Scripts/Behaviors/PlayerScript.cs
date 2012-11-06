@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent (typeof(CharacterController))]
 public class PlayerScript : MonoBehaviour {
@@ -8,6 +9,10 @@ public class PlayerScript : MonoBehaviour {
 	private exSprite mSprite;
 	private CharacterController mCharacter;
 	private PlayerData mPlayer;
+	private int mSelectedSkill;
+	private int mRequestedSkill;
+	private List<Skill> mLearnedSkills;
+	private List<Skill> mSelectedSkills;
 	
 	private Vector3 mMoveVelocity;
 	
@@ -23,23 +28,29 @@ public class PlayerScript : MonoBehaviour {
 	private bool mSkillPressed;
 	private bool mAttackPressed;
 	
-	private bool mCurrentSkill;
 	private int  mCurrentJump;
 	private int  mCurrentRunDir;
-	
-	private const float kGravity = 1700.0f;
+	private bool[] mIsSkillCooling = new bool[4];
+	private const float kGravity = 3000.0f;
 	private const float kFriction = 4000.0f;
 	
 	// Use this for initialization
 	void Start ()
 	{
-		mPlayer = new PlayerData(1, null, null);
+		mLearnedSkills = new List<Skill>();
+		mSelectedSkills = new List<Skill>();
+		Skill fireball = new Skill(0,"Fireball","Description",1,10,1000,1000,"",200,200,false,3.0f,0,"Fireball");
+		mLearnedSkills.Add(fireball);
+		mSelectedSkills.Add(fireball);
+		mPlayer = new PlayerData(1, mLearnedSkills, mSelectedSkills);
+		mSelectedSkill = 0;
 		mCharacter = GetComponent<CharacterController>();
 		mMoveVelocity = new Vector3(0,0,0);
 		mAirborne = true;
 		mJumpWait = true;
 		mCurrentJump = 0;
 		mCurrentRunDir = 1;
+		mRequestedSkill = 0;
 		mSprite = GetComponent<exSprite>();
 		mAI = (PlayerAI)gameObject.AddComponent("PlayerAI");
 	}
@@ -61,6 +72,15 @@ public class PlayerScript : MonoBehaviour {
 						Input.GetKey(KeyCode.Alpha2) || 
 						Input.GetKey(KeyCode.Alpha3) || 
 						Input.GetKey(KeyCode.Alpha4);
+		
+		if (Input.GetKey(KeyCode.Alpha1))
+			mRequestedSkill = 0;
+		else if (Input.GetKey(KeyCode.Alpha2))
+			mRequestedSkill = 1;
+		else if (Input.GetKey(KeyCode.Alpha3))
+			mRequestedSkill = 2;
+		else if (Input.GetKey(KeyCode.Alpha4))
+			mRequestedSkill = 3;
 		
 		mAttackPressed = Input.GetKey(KeyCode.Space);
 	}
@@ -89,27 +109,40 @@ public class PlayerScript : MonoBehaviour {
 	
 	public bool CheckAttackCooldown ()
 	{
-		return true;	
+		Debug.Log ("Check Attack cooling: " + mIsSkillCooling[mSelectedSkill]);
+		return !mIsSkillCooling[mSelectedSkill];	
 	}
 	
 	public void ActiveSkill () 
 	{
+		mSelectedSkill = mRequestedSkill;
+		// do whatever to the action bar
 	}
 	
 	public bool CheckSkillExists ()
 	{
-		return true;
+		if (mRequestedSkill < mSelectedSkills.Count)
+			return true;
+		return false;
 	}
 	
 	public void AnimateAttack ()
 	{
-		
+		StartCoroutine("CoroutineAttack");
 	}
 	
 	public void Attack()
 	{
+		Debug.Log ("Attacking with " + mSelectedSkills[mSelectedSkill].SkillName);
 	}
-	
+	IEnumerator CoroutineAttack ()
+	{
+		mIsSkillCooling[mSelectedSkill] = true;
+		float delay = mSelectedSkills[mSelectedSkill].SkillDelay;
+		Debug.Log ("Attack Delay " + delay);
+		yield return new WaitForSeconds(delay);
+		mIsSkillCooling[mSelectedSkill] = false;
+	}
 	/*
 	 * Jump Branch
 	 */
