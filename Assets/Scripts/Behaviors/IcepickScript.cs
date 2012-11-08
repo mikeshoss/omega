@@ -18,7 +18,7 @@ public class IcepickScript : SkillScript {
 	
 	public override void Active ()
 	{
-		transform.Translate(new Vector3(1000, 0, 0) * Time.deltaTime * (transform.localScale.x / Mathf.Abs(transform.localScale.x)));
+		transform.Translate(new Vector3(2000, 0, 0) * Time.deltaTime * (transform.localScale.x / Mathf.Abs(transform.localScale.x)));
 	}
 	
 	public override void End ()
