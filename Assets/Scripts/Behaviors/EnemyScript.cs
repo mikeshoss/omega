@@ -1,49 +1,43 @@
-using UnityEngine;
+	using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent (typeof(CharacterController))]
-public class EnemyScript : MonoBehaviour {
+public class EnemyScript : CombatantScript {
 	
-	private CharacterController mCharacter;
 	private EnemyData mEnemy;
-	private exSprite mSprite;
 	public List<GameObject> mPath;
-	private List<Skill> mSelectedSkills;
 	
-	private Vector3 mMoveVelocity;
-	
-	private float mHealth;
-	private float mEnergy; 
 	private float mXViewRange;
 	private float mYViewRange; 
 	
-	private int mCurrentNode;
 	private int mNextNode;
-	private int mDirection;
-	private int mSelectedSkill;
 	
 	private bool mIsDead; 
 	private bool mIsHostile;
 	private bool mIsWandering;
 	private bool mIsIdle;
-	private bool mIsAttacking;
-	private bool mIsAirborne;
-	private bool[] mIsSkillCooling = new bool[4];
 	
-	private const float kGravity = 			1700.0f;
 	private const float kMinNodeDistance = 	100.0f;
 	private const float kNodeWaitTime = 	0.2f;
 	
 	void Start () {
 		mCharacter = 		(CharacterController)GetComponent<CharacterController>();
-		mEnemy = 			new EnemyData(1, null);
 		mSprite = 			(exSprite)GetComponent<exSprite>();
 		mSelectedSkills = 	new List<Skill>();
-		Skill icepick = 	new Skill(1,"Icepick", "Cold pick", 1, 10, 50, 500, "", 0, 0, false, 0.8f, 0, "Icepick");
-		mSelectedSkills.Add(icepick);
-		mSelectedSkill = 	0;
-		mCurrentNode = 		0;
+		mEnemy = 			new EnemyData(1, mSelectedSkills);
+		mCombatantType = 	CombatantType.ENEMY;
+		mMoveVelocity = 	new Vector3(0,0,0);
+		mHealth = 			mEnemy.MaxHealth;
+		mEnergy = 			mEnemy.MaxEnergy;
+		mXViewRange = 		700.0f;
+		mYViewRange = 		300.0f;
+		mCurrentSkill = 	0;
+		mIsDead = 			false;
+		mIsHostile = 		false;
+		mIsWandering = 		false;
+		mIsIdle = 			true;
+		mIsAirborne = 		true;
 		
 		if (mPath.Count > 1) {
 			mNextNode = 1;
@@ -51,19 +45,8 @@ public class EnemyScript : MonoBehaviour {
 			mNextNode = 0;
 		}
 		
-		mMoveVelocity = 	new Vector3(0,0,0);
-		mHealth = 			mEnemy.MaxHealth;
-		mEnergy = 			mEnemy.MaxEnergy;
-		mXViewRange = 		700.0f;
-		mYViewRange = 		300.0f;
-		mIsDead = 			false;
-		mIsHostile = 		false;
-		mIsWandering = 		false;
-		mIsIdle = 			true;
-		mIsAttacking = 		true;
-		mIsAirborne = 		true;
-		
-		// Always set last
+		Skill icepick = new Skill(1, "Icepick", "Description", 20.0f, this, 0.6f, 0.5f, 0.3f, 3.0f, 1.0f, "Icepick");
+		mSelectedSkills.Add(icepick);
 		gameObject.AddComponent("EnemyAI");
 	}
 	
@@ -91,6 +74,7 @@ public class EnemyScript : MonoBehaviour {
 	public void DeadAction ()
 	{
 		//do nothing	
+		Destroy(gameObject);
 	}
 	
 	/*
@@ -137,6 +121,25 @@ public class EnemyScript : MonoBehaviour {
 						(player.transform.position.y - mYViewRange <= transform.position.y &&
 						transform.position.y <= player.transform.position.y + mYViewRange));
 		
+		if (mIsHostile)
+		{
+			float dirCheck = player.transform.position.x - transform.position.x;
+			Vector3 scale = gameObject.transform.localScale;
+			scale.x = Mathf.Abs(scale.x);
+			
+			if ( dirCheck >= 0) {
+				mDirection = 1;
+				scale.x *= 1;
+			}
+			else {
+				mDirection = -1;
+				scale.x *= -1;
+			}
+			
+			gameObject.transform.localScale = scale;
+			
+		}
+		
 	}
 	public bool IsHostile ()
 	{
@@ -154,8 +157,8 @@ public class EnemyScript : MonoBehaviour {
 	
 	public bool IsAttackCooling ()
 	{
-		Debug.Log ("Check Attack cooling: " + mIsSkillCooling[mSelectedSkill]);
-		return mIsSkillCooling[mSelectedSkill];	
+		Debug.Log ("Check Attack cooling: " + mIsSkillCooling[mCurrentSkill]);
+		return mIsSkillCooling[mCurrentSkill];	
 	}
 	
 	public void AnimateAttack ()
@@ -165,10 +168,19 @@ public class EnemyScript : MonoBehaviour {
 	}
 	IEnumerator CoroutineAttack ()
 	{
-		mIsSkillCooling[mSelectedSkill] = true;
-		float delay = mSelectedSkills[mSelectedSkill].SkillDelay;
+		mIsSkillCooling[mCurrentSkill] = true;
+		float delay = mSelectedSkills[mCurrentSkill].OriginDelay;
+
+		GameObject go = mSelectedSkills[mCurrentSkill].InstantiateObject();
+		SkillScript sc = (SkillScript)go.GetComponent<SkillScript>();
+		sc.Skill = mSelectedSkills[mCurrentSkill];
+		sc.Origin = this;
+		
+		MeshRenderer mr = (MeshRenderer)go.GetComponent<MeshRenderer>();
+		mr.enabled = false;
+		
 		yield return new WaitForSeconds(delay);
-		mIsSkillCooling[mSelectedSkill] = false;
+		mIsSkillCooling[mCurrentSkill] = false;
 	}
 	public void AttackAction ()
 	{
@@ -315,5 +327,27 @@ public class EnemyScript : MonoBehaviour {
 	void Move()
 	{
 		//mCharacter.Move (mMoveVelocity * Time.deltaTime);
+	}
+	
+	public void OnTriggerEnter (Collider other)
+	{
+		// determine if it was a skill
+		if (other.tag == "Skill")
+		{
+			//determine if it was an enemies skill
+			SkillScript ss = (SkillScript)other.gameObject.GetComponent<SkillScript>();
+			
+			if (ss != null)
+			{
+				if (ss.Origin.GetCombatantType != mCombatantType)	
+				{
+					ss.Target = this;
+					ss.ShouldEnd();
+				}
+			} else
+			{
+				Debug.Log ("Something went wrong");	
+			}
+		}
 	}
 }

@@ -156,10 +156,10 @@ public class EnemyData {
 		mSkillsAble = skillsAble;
 	}
 
-	public EnemyData (int level, List<Skill> skillsAble, Transform mSavedPosition)
+	public EnemyData (int level, List<Skill> skillsAble, Transform savedPosition)
 		: this(level, skillsAble)
 	{
-		mSavedPosition = mSavedPosition;
+		mSavedTransform = savedPosition;
 	}
 	
 	

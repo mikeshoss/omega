@@ -9,126 +9,99 @@ enum SkillList
 	NUM_SKILLS
 }
 
+enum AnimType
+{
+	ATTACK,
+	DAMAGE_LIGHT,
+	DAMAGE_HEAVY,
+	MOVE_RUN,
+	MOVE_IDLE,
+	MOVE_JUMP,
+	NUM_ANIMATION_TYPES
+}
+
 public class Skill {
 	
-	private int mSkillId;
-	private string mSkillName;
-	private string mSKillDesc;
-	private int mSkillCurLevel;
-	private int mSkillMaxLevel;
-	private float mSkillMagnitude;
-	private float mSkillRange;
-	private string mSkillTypeInfo;
-	private float mSkillSplRange;
-	private float mSkillSplMagnitude;
-	private bool mSkillFollowOrigin;
-	private float mSkillDelay;
-	private int mSkillElement; //should the element types be set with ID's? ex water : 1 earth : 2 jizz : 9
-	private string mResource;
+	private CombatantScript mOrigin;
+
+	private int 	mId;
+	
+	private string 	mName;
+	private string 	mDesc;
+	private float 	mMagnitude; // used to evaluate the strength of a skill
+
+	private float 	mOriginDelay;
+	
+	private float	mTargetRecoveryTime; // The amount of time a target is unable to respond
+	
+	private float 	mStartupTime; // The amount of time the skill is in startup
+	private float   mActiveTime; // The amount of time the skill is in active
+	private float 	mEndTime; 	  // The amount of time the skill is in end
+
+	private string 	mResource;
 	
 	/*Member variable properties*/
-	
-	public string SkillName
+	public string Name
 	{
 		get
 		{
-			return mSkillName;	
+			return mName;
+		}
+	}
+
+	public string Description
+	{
+		get
+		{
+			return mDesc;
+		}
+	}
+
+	public float Magnitude
+	{
+		get
+		{
+			return mMagnitude;
+		}
+	}
+
+	public float OriginDelay
+	{
+		get
+		{
+			return mOriginDelay;
+		}
+	}
+
+	public float TargetRecoveryTime
+	{
+		get
+		{
+			return mTargetRecoveryTime;
+		}
+	}
+
+	public float StartupTime
+	{
+		get
+		{
+			return mStartupTime;
+		}
+	}
+
+	public float ActiveTime
+	{
+		get
+		{
+			return mActiveTime;
 		}
 	}
 	
-	public int SkillId
+	public float EndTime
 	{
 		get
 		{
-			return mSkillId;	
-		}
-	}
-	
-	public string SkillDesc
-	{
-		get
-		{
-			return mSKillDesc;
-		}
-	}
-	
-	public int SkillCurLevel
-	{
-		get
-		{
-			return mSkillCurLevel;
-		}
-	}
-	
-	public int SkillMaxLevel
-	{
-		get
-		{
-			return mSkillMaxLevel;
-		}
-	}
-	
-		public float SkillMagnitude
-	{
-		get
-		{
-			return mSkillMagnitude;
-		}
-	}
-	
-	public float SkillRange
-	{
-		get
-		{
-			return mSkillRange;
-		}
-	}
-	
-	public string SkillTypeInfo
-	{
-		get
-		{
-			return mSkillTypeInfo;
-		}
-	}
-		
-	public float SkillSplRange
-	{
-		get
-		{
-			return mSkillSplRange;
-		}
-	}
-	
-	public float SkillSplMagnitude
-	{
-		get
-		{
-			return mSkillSplMagnitude;
-		}
-	}
-	
-	public bool SkillFollowOrigin
-	{
-		get
-		{
-			return mSkillFollowOrigin;
-		}
-	}
-	
-	public float SkillDelay
-	{
-		get
-		{
-			return mSkillDelay;
-		}
-	}
-	
-	public int SkillElement
-	{
-		get
-		{
-			return mSkillElement;
+			return mEndTime;	
 		}
 	}
 	
@@ -140,29 +113,30 @@ public class Skill {
 		}
 	}
 	
-	public void InstantiateObject()
+	public GameObject InstantiateObject()
 	{
-		MonoBehaviour.Instantiate(Resources.Load(mResource));	
+		Debug.Log ("Instantiate " + mResource);
+		return (GameObject)MonoBehaviour.Instantiate(Resources.Load(mResource));	
 	}
 	
-	public Skill(int id, string name, string desc, int curLevel, int maxLevel, float magnitude, float range, 
-		string typeinfo, float splRange, float splMagnitude, bool followOrigin, float delay, int element, string resource)
+	public Skill(int id, string name, string desc, float magnitude, 
+		CombatantScript origin, float originDelay,
+		float targetRecoveryTime, float skillStartupTime, float skillActiveTime, float skillEndTime,
+		string resource)
 	{
-		mSkillId = id;
-		mSkillName = name;
-		mSKillDesc = desc;
-		mSkillCurLevel = curLevel;
-		mSkillMaxLevel = maxLevel;
-		mSkillMagnitude = magnitude;
-		mSkillRange = range;
-		mSkillTypeInfo = typeinfo;
-		mSkillSplRange = splRange;
-		mSkillSplMagnitude = splMagnitude;
-	 	mSkillFollowOrigin = followOrigin;
-	 	mSkillDelay = delay;
-	 	mSkillElement = element;
+		mId = id;
+		mName = name;
+		mDesc = desc;
+		mMagnitude = magnitude;
+		origin = mOrigin;
+		mOriginDelay = originDelay;
+		mTargetRecoveryTime = targetRecoveryTime;
+		mStartupTime = skillStartupTime;
+		mActiveTime = skillActiveTime;
+		mEndTime = skillEndTime;
 		mResource = resource;
 	}
+
 	
 }//end class
 

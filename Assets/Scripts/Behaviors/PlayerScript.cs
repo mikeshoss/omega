@@ -2,87 +2,64 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent (typeof(CharacterController))]
-public class PlayerScript : MonoBehaviour {
+public class PlayerScript : CombatantScript {
 
-	private PlayerAI mAI;
-	private exSprite mSprite;
-	private CharacterController mCharacter;
 	private PlayerData mPlayer;
-	private int mSelectedSkill;
-	private int mRequestedSkill;
-	private List<Skill> mLearnedSkills;
-	private List<Skill> mSelectedSkills;
+
+	private int  mRequestedSkill;
+	private int  mJumpCount;
 	
-	private Vector3 mMoveVelocity;
-	
-	private bool mJumpWait;
-	private bool mJumpMax;
-	private bool mAirborne;
-	
-	/*
-	 * Checks player input
-	 */
+	private bool mCanJump;
 	private bool mJumpPressed;
 	private bool mRunPressed;
 	private bool mSkillPressed;
 	private bool mAttackPressed;
 	
-	private int  mCurrentJump;
-	private int  mCurrentRunDir;
-	private bool[] mIsSkillCooling = new bool[4];
-	private const float kGravity = 3000.0f;
-	private const float kFriction = 4000.0f;
-	
 	// Use this for initialization
 	void Start ()
 	{
-		mLearnedSkills = new List<Skill>();
-		mSelectedSkills = new List<Skill>();
-		Skill fireball = new Skill(0,"Fireball","Description",1,10,1000,1000,"",200,200,false,3.0f,0,"Fireball");
+		mCharacter = 		GetComponent<CharacterController>();
+		mSprite = 			GetComponent<exSprite>();
+		mLearnedSkills = 	new List<Skill>();
+		mSelectedSkills = 	new List<Skill>();
+		mPlayer = 			new PlayerData(1, mLearnedSkills, mSelectedSkills);
+		mHealth = 			mPlayer.MaxHealth;
+		mEnergy	=			mPlayer.MaxEnergy;
+		mCombatantType = 	CombatantType.PLAYER;
+		mMoveVelocity = 	new Vector3(0,0,0);
+		mCurrentSkill = 	0;
+		mRequestedSkill = 	0;
+		mJumpCount = 		0;
+		mDirection = 		1;
+		mIsAirborne = 		true;
+		mCanJump = 			true;
+		Skill fireball = 	new Skill(0, "Fireball", "Description", 40.0f, this, 0.3f, 0.5f, 0.3f, 3.0f, 0.7f, "Fireball");
+		
 		mLearnedSkills.Add(fireball);
 		mSelectedSkills.Add(fireball);
-		mPlayer = new PlayerData(1, mLearnedSkills, mSelectedSkills);
-		mSelectedSkill = 0;
-		mCharacter = GetComponent<CharacterController>();
-		mMoveVelocity = new Vector3(0,0,0);
-		mAirborne = true;
-		mJumpWait = true;
-		mCurrentJump = 0;
-		mCurrentRunDir = 1;
-		mRequestedSkill = 0;
-		mSprite = GetComponent<exSprite>();
-		mAI = (PlayerAI)gameObject.AddComponent("PlayerAI");
+
+		gameObject.AddComponent("PlayerAI");
 	}
 	
-	// Update is called once per frame
 	void Update ()
 	{
-		mRunPressed = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D);
-		
-		if (Input.GetKey(KeyCode.A))
-			mCurrentRunDir = -1;
-		
-		if(Input.GetKey(KeyCode.D))
-			mCurrentRunDir = 1;	
-		
 		mJumpPressed = Input.GetKey(KeyCode.W);
-		
-		mSkillPressed = Input.GetKey(KeyCode.Alpha1) || 
-						Input.GetKey(KeyCode.Alpha2) || 
-						Input.GetKey(KeyCode.Alpha3) || 
-						Input.GetKey(KeyCode.Alpha4);
-		
-		if (Input.GetKey(KeyCode.Alpha1))
-			mRequestedSkill = 0;
-		else if (Input.GetKey(KeyCode.Alpha2))
-			mRequestedSkill = 1;
-		else if (Input.GetKey(KeyCode.Alpha3))
-			mRequestedSkill = 2;
-		else if (Input.GetKey(KeyCode.Alpha4))
-			mRequestedSkill = 3;
-		
 		mAttackPressed = Input.GetKey(KeyCode.Space);
+
+		if(mRunPressed = Input.GetKey(KeyCode.D))
+			mDirection = 1;
+		else if (mRunPressed = Input.GetKey(KeyCode.A))
+			mDirection = -1;
+		
+		if (mSkillPressed = Input.GetKey(KeyCode.Alpha1))
+			mRequestedSkill = 0;
+		else if (mSkillPressed = Input.GetKey(KeyCode.Alpha2))
+			mRequestedSkill = 1;
+		else if (mSkillPressed = Input.GetKey(KeyCode.Alpha3))
+			mRequestedSkill = 2;
+		else if (mSkillPressed = Input.GetKey(KeyCode.Alpha4))
+			mRequestedSkill = 3;
+
 	}
 	
 	void FixedUpdate ()
@@ -109,21 +86,19 @@ public class PlayerScript : MonoBehaviour {
 	
 	public bool CheckAttackCooldown ()
 	{
-		Debug.Log ("Check Attack cooling: " + mIsSkillCooling[mSelectedSkill]);
-		return !mIsSkillCooling[mSelectedSkill];	
+		return !mIsSkillCooling[mCurrentSkill];	
 	}
 	
 	public void ActiveSkill () 
 	{
-		mSelectedSkill = mRequestedSkill;
+		mCurrentSkill = mRequestedSkill;
 		// do whatever to the action bar
+		// ActionBar.HighlighSkill(mCurrentSkill);
 	}
 	
 	public bool CheckSkillExists ()
 	{
-		if (mRequestedSkill < mSelectedSkills.Count)
-			return true;
-		return false;
+		return mRequestedSkill < mSelectedSkills.Count;
 	}
 	
 	public void AnimateAttack ()
@@ -131,17 +106,26 @@ public class PlayerScript : MonoBehaviour {
 		StartCoroutine("CoroutineAttack");
 	}
 	
-	public void Attack()
+	public void AttackAction()
 	{
-		Debug.Log ("Attacking with " + mSelectedSkills[mSelectedSkill].SkillName);
+
 	}
+	
 	IEnumerator CoroutineAttack ()
 	{
-		mIsSkillCooling[mSelectedSkill] = true;
-		float delay = mSelectedSkills[mSelectedSkill].SkillDelay;
-		Debug.Log ("Attack Delay " + delay);
+		mIsSkillCooling[mCurrentSkill] = true;
+		float delay = mSelectedSkills[mCurrentSkill].OriginDelay;
+		
+		GameObject go = mSelectedSkills[mCurrentSkill].InstantiateObject();
+		SkillScript sc = (SkillScript)go.GetComponent<SkillScript>();
+		sc.Skill = mSelectedSkills[mCurrentSkill];
+		sc.Origin = this;
+		
+		MeshRenderer mr = (MeshRenderer)go.GetComponent<MeshRenderer>();
+		mr.enabled = false;
+		
 		yield return new WaitForSeconds(delay);
-		mIsSkillCooling[mSelectedSkill] = false;
+		mIsSkillCooling[mCurrentSkill] = false;
 	}
 	/*
 	 * Jump Branch
@@ -151,27 +135,21 @@ public class PlayerScript : MonoBehaviour {
 		return mJumpPressed;
 	}
 	
-	public bool CheckJumpWaitTime ()
+	public bool CanJump ()
 	{
-		return mJumpWait;	
-	}
-	
-	private void SetJumpWait(bool val)
-	{
-		mJumpWait = val;
+		return mCanJump;	
 	}
 	
 	IEnumerator CoroutineJumpWaitTime ()
 	{
-		SetJumpWait(false);
+		mCanJump = false;
 		yield return new WaitForSeconds(mPlayer.JumpWaitTime);
-		SetJumpWait(true);
-		StopCoroutine("CoroutineJumpWaitTime");
+		mCanJump = true;
 	}
 	
 	public bool CheckJumpMax ()
 	{
-		return mCurrentJump < mPlayer.MaxJump;
+		return mJumpCount < mPlayer.MaxJump;
 	}
 	
 	public void AnimateJump ()
@@ -181,10 +159,10 @@ public class PlayerScript : MonoBehaviour {
 	
 	public void JumpAction ()
 	{
-		mAirborne = true;
+		mIsAirborne = true;
 		StartCoroutine(CoroutineJumpWaitTime());
 		mMoveVelocity.y = mPlayer.JumpVelocity;
-		mCurrentJump++;
+		mJumpCount++;
 	}
 	
 	/*
@@ -203,15 +181,15 @@ public class PlayerScript : MonoBehaviour {
 	
 	public void RunAction ()
 	{
-		if (mCurrentRunDir > 0)
+		if (mDirection > 0)
 			mMoveVelocity.x += mPlayer.RunAcceleration * Time.deltaTime;
 			
-		else if (mCurrentRunDir < 0)
+		else if (mDirection < 0)
 			mMoveVelocity.x -= mPlayer.RunAcceleration * Time.deltaTime;
 		
-		if ((mMoveVelocity.x > mPlayer.MaxRunSpeed && mCurrentRunDir == 1) || (mMoveVelocity.x < -mPlayer.MaxRunSpeed && mCurrentRunDir == -1))
+		if ((mMoveVelocity.x > mPlayer.MaxRunSpeed && mDirection == 1) || (mMoveVelocity.x < -mPlayer.MaxRunSpeed && mDirection == -1))
 		{
-			mMoveVelocity.x = mPlayer.MaxRunSpeed * mCurrentRunDir;	
+			mMoveVelocity.x = mPlayer.MaxRunSpeed * mDirection;	
 		}
 		
 		Vector3 scale = gameObject.transform.localScale;
@@ -219,12 +197,12 @@ public class PlayerScript : MonoBehaviour {
 		
 		if (mMoveVelocity.x > 0)
 		{
-			mCurrentRunDir = 1;
+			mDirection = 1;
 			scale.x *= 1;
 		}
 		else if (mMoveVelocity.x < 0)
 		{
-			mCurrentRunDir = -1;
+			mDirection = -1;
 			scale.x *= -1;
 		}
 		gameObject.transform.localScale = scale;
@@ -246,12 +224,12 @@ public class PlayerScript : MonoBehaviour {
 	
 	public bool IsAirborne ()
 	{
-		return mAirborne;
+		return mIsAirborne;
 	}
 	
 	private void ApplyGravity ()
 	{
-		if (mAirborne)
+		if (mIsAirborne)
 		{
 			mMoveVelocity.y -= kGravity * Time.deltaTime;
 		}
@@ -259,16 +237,16 @@ public class PlayerScript : MonoBehaviour {
 	
 	private void ApplyFriction ()
 	{
-		if (!mAirborne && !mRunPressed)
+		if (!mIsAirborne && !mRunPressed)
 		{
-			if (mCurrentRunDir > 0)
+			if (mDirection > 0)
 			{
 				mMoveVelocity.x -= kFriction * Time.deltaTime;
 				if (mMoveVelocity.x < 0)
 					mMoveVelocity.x = 0;	
 			}
 			
-			if (mCurrentRunDir < 0)
+			if (mDirection < 0)
 			{
 				mMoveVelocity.x += kFriction * Time.deltaTime;
 				if (mMoveVelocity.x > 0)
@@ -300,7 +278,7 @@ public class PlayerScript : MonoBehaviour {
 		pos2.y -= (height / 2.0f) * transform.localScale.y - 5;
 		pos2.x += mCharacter.radius/ 5.0f;
 
-        mAirborne = (!Physics.Raycast(pos, down, out hit, mMoveVelocity.y * Time.deltaTime + 10) && 
+        mIsAirborne = (!Physics.Raycast(pos, down, out hit, mMoveVelocity.y * Time.deltaTime + 10) && 
 					!Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 10));
 		
 		Vector3 debugVector = mMoveVelocity;
@@ -316,8 +294,8 @@ public class PlayerScript : MonoBehaviour {
 		if (hit.gameObject.layer == terrainLayer && mCharacter.collisionFlags == CollisionFlags.Below)
 		{
 			mMoveVelocity.y = 0;
-			mAirborne = false;
-			mCurrentJump = 0;
+			mIsAirborne = false;
+			mJumpCount = 0;
 		}
 
 		// If player hits a wall, set x velocity to 0.
@@ -329,6 +307,28 @@ public class PlayerScript : MonoBehaviour {
 		if (hit.gameObject.layer == terrainLayer && mCharacter.collisionFlags == CollisionFlags.CollidedAbove)
 		{
 			mMoveVelocity.y = 0;	
+		}
+	}
+	
+	public void OnTriggerEnter (Collider other)
+	{
+		// determine if it was a skill
+		if (other.tag == "Skill")
+		{
+			//determine if it was an enemies skill
+			SkillScript ss = (SkillScript)other.gameObject.GetComponent<SkillScript>();
+			
+			if (ss != null)
+			{
+				if (ss.Origin.GetCombatantType != mCombatantType)	
+				{
+					ss.Target = this;
+					ss.ShouldEnd();
+				}
+			} else
+			{
+				Debug.Log ("Something went wrong");	
+			}
 		}
 	}
 }

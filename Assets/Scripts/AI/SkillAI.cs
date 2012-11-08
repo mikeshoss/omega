@@ -12,11 +12,12 @@ public class SkillAI : MonoBehaviour, IAgent {
 	IEnumerator Start ()
 	{
 		mSkill = (SkillScript)GetComponent<SkillScript>();
+		Debug.Log("Shit Started");
 		tree = BLBehaveLib.InstantiateTree(BLBehaveLib.TreeType.AI_Skill, this);
 		
 		while (Application.isPlaying && tree != null)
 		{
-			yield return new WaitForSeconds(1.0f / tree.Frequency);
+			yield return null;
 			AIUpdate();	
 		}
 	}
@@ -38,6 +39,7 @@ public class SkillAI : MonoBehaviour, IAgent {
 	
 	public BehaveResult Tick (Tree sender, bool init)
 	{
+		Debug.Log ("Skill ticked");
 		return BehaveResult.Failure;
 	}
 	
@@ -54,16 +56,24 @@ public class SkillAI : MonoBehaviour, IAgent {
 	
 	public BehaveResult TickStartupAction (Tree sender)
 	{
-		return BehaveResult.Failure;
+		mSkill.Startup();
+		return BehaveResult.Success;
 	}
 	
 	public BehaveResult TickActiveAction (Tree sender)
 	{
-		return BehaveResult.Failure;
+		mSkill.Active();
+		
+		if (!mSkill.IsActive())
+		{
+			return BehaveResult.Success;
+		}	
+		return BehaveResult.Running;
 	}
 	
 	public BehaveResult TickEndAction (Tree sender)
 	{
-		return BehaveResult.Failure;
+		mSkill.End();
+		return BehaveResult.Success;
 	}
 }

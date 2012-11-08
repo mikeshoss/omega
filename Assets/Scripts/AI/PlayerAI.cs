@@ -146,7 +146,7 @@ public class PlayerAI : MonoBehaviour, IAgent {
 	}
 	public BehaveResult TickAttackAction (Tree sender)
 	{
-		mPlayer.Attack();
+		mPlayer.AttackAction();
 		return BehaveResult.Success;
 	}
 	
@@ -165,7 +165,7 @@ public class PlayerAI : MonoBehaviour, IAgent {
 	}
 	public BehaveResult TickCheckJumpWaitTimeAction (Tree sender)
 	{
-		if (mPlayer.CheckJumpWaitTime())
+		if (mPlayer.CanJump())
 			return BehaveResult.Success;
 		
 		return BehaveResult.Failure;
