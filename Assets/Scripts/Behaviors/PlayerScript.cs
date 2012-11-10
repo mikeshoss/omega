@@ -373,14 +373,14 @@ public class PlayerScript : CombatantScript {
 
 		Vector3 pos2 = transform.position;
 
-		pos2.y -= (height / 2.0f) * transform.localScale.y - 5;
+		pos2.y -= (height / 2.0f) * transform.localScale.y - 25;
 		pos2.x += mCharacter.radius/ 5.0f;
 
-        mIsAirborne = (!Physics.Raycast(pos, down, out hit, mMoveVelocity.y * Time.deltaTime + 10) && 
-					!Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 10));
+        mIsAirborne = (!Physics.Raycast(pos, down, out hit, mMoveVelocity.y * Time.deltaTime + 30) && 
+					!Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 30));
 		
 		Vector3 debugVector = mMoveVelocity;
-		debugVector.y = debugVector.y * Time.deltaTime + 10;
+		debugVector.y = debugVector.y * Time.deltaTime + 30;
 		
 		Debug.DrawRay(pos, debugVector * Time.deltaTime, Color.red);
 		Debug.DrawRay(pos2, debugVector * Time.deltaTime, Color.red);
