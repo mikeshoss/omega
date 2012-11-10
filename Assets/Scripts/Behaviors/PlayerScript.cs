@@ -15,6 +15,11 @@ public class PlayerScript : CombatantScript {
 	private bool mSkillPressed;
 	private bool mAttackPressed;
 	
+	private bool mJumpChecked;
+	private bool mAttackChecked;
+	private bool mRunChecked;
+	private bool mSkillChecked;
+	
 	// Use this for initialization
 	void Start ()
 	{
@@ -33,33 +38,97 @@ public class PlayerScript : CombatantScript {
 		mDirection = 		1;
 		mIsAirborne = 		true;
 		mCanJump = 			true;
+		mJumpChecked = 		true;
+		mAttackChecked =	true;
+		mRunChecked = 		true;
+		mSkillChecked = 	true;
 		Skill fireball = 	new Skill(0, "Fireball", "Description", 40.0f, this, 0.3f, 0.5f, 0.3f, 3.0f, 0.7f, "Fireball");
-		
+		Skill icepick = 	new Skill(1, "Icepick", "D", 30.0f, this, 0.3f, 0.5f, 0.3f, 3.0f, 0.7f, "Icepick");
 		mLearnedSkills.Add(fireball);
+		mLearnedSkills.Add (icepick);
 		mSelectedSkills.Add(fireball);
+		mSelectedSkills.Add (icepick);
 
 		gameObject.AddComponent("PlayerAI");
 	}
 	
 	void Update ()
 	{
-		mJumpPressed = Input.GetKey(KeyCode.W);
-		mAttackPressed = Input.GetKey(KeyCode.Space);
-
-		if(mRunPressed = Input.GetKey(KeyCode.D))
-			mDirection = 1;
-		else if (mRunPressed = Input.GetKey(KeyCode.A))
-			mDirection = -1;
 		
-		if (mSkillPressed = Input.GetKey(KeyCode.Alpha1))
-			mRequestedSkill = 0;
-		else if (mSkillPressed = Input.GetKey(KeyCode.Alpha2))
-			mRequestedSkill = 1;
-		else if (mSkillPressed = Input.GetKey(KeyCode.Alpha3))
-			mRequestedSkill = 2;
-		else if (mSkillPressed = Input.GetKey(KeyCode.Alpha4))
-			mRequestedSkill = 3;
-
+		if (Input.GetKeyDown(KeyCode.W) && mJumpChecked)
+		{
+			mJumpPressed = true;
+			mJumpChecked = false;
+		} else if (mJumpChecked)
+		{
+			mJumpPressed = Input.GetKeyDown(KeyCode.W);	
+		}
+		
+		
+		if (Input.GetKeyDown(KeyCode.Space) && mAttackChecked)
+		{
+			mAttackPressed = true;
+			mAttackChecked = false;
+		} else if (mAttackChecked)
+		{
+			mAttackPressed = Input.GetKeyDown(KeyCode.Space);
+		}
+		
+		if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.A)) && mRunChecked)
+		{
+			if (Input.GetKey(KeyCode.D))
+				mDirection = 1;
+			else if (Input.GetKey(KeyCode.A))
+				mDirection = -1;
+			
+			mRunPressed = true;
+			mRunChecked = false;
+		} else if (mRunChecked)
+		{
+			if(mRunPressed = Input.GetKey(KeyCode.D))
+			{
+				mDirection = 1;
+				Debug.Log ("right pressed");
+			}
+			else if (mRunPressed = Input.GetKey(KeyCode.A))
+			{
+				mDirection = -1;
+				Debug.Log("Left pressed");
+			}
+		}
+		
+		if ((Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1)) && mSkillChecked)
+		{
+			if (Input.GetKey(KeyCode.Alpha1))
+				mRequestedSkill = 0;
+			else if (Input.GetKey(KeyCode.Alpha2))
+				mRequestedSkill = 1;
+			else if (Input.GetKey(KeyCode.Alpha3))
+				mRequestedSkill = 2;
+			else if (Input.GetKey(KeyCode.Alpha4))
+				mRequestedSkill = 3;
+			
+			mSkillPressed = true;
+			mSkillChecked = false;
+		} else if (mSkillChecked)
+		{
+			if (mSkillPressed = Input.GetKey(KeyCode.Alpha1))
+				mRequestedSkill = 0;
+			else if (mSkillPressed = Input.GetKey(KeyCode.Alpha2))
+				mRequestedSkill = 1;
+			else if (mSkillPressed = Input.GetKey(KeyCode.Alpha3))
+				mRequestedSkill = 2;
+			else if (mSkillPressed = Input.GetKey(KeyCode.Alpha4))
+				mRequestedSkill = 3;
+		}
+		
+		if (Input.GetKeyDown(KeyCode.Return) && Time.timeScale != 0)
+			Time.timeScale = 0;
+		else if (Input.GetKeyDown(KeyCode.Return) && Time.timeScale == 0)
+			Time.timeScale = 1;
+		
+		
+		
 	}
 	
 	void FixedUpdate ()
@@ -135,6 +204,24 @@ public class PlayerScript : CombatantScript {
 		return mJumpPressed;
 	}
 	
+	public void SetJumpChecked(bool val)
+	{
+		mJumpChecked = val;	
+	}
+	
+	public void SetAttackChecked(bool val)
+	{
+		mAttackChecked = val;	
+	}
+	public void SetRunChecked(bool val)
+	{
+		mRunChecked = val;	
+	}
+	public void SetSkillChecked(bool val)
+	{
+		mSkillChecked = val;	
+	}
+	
 	public bool CanJump ()
 	{
 		return mCanJump;	
@@ -181,13 +268,16 @@ public class PlayerScript : CombatantScript {
 	
 	public void RunAction ()
 	{
-		if (mDirection > 0)
+		if (mDirection == 1) {
 			mMoveVelocity.x += mPlayer.RunAcceleration * Time.deltaTime;
-			
-		else if (mDirection < 0)
+			Debug.Log("Right");
+		}
+		else if (mDirection == -1) {
 			mMoveVelocity.x -= mPlayer.RunAcceleration * Time.deltaTime;
-		
-		if ((mMoveVelocity.x > mPlayer.MaxRunSpeed && mDirection == 1) || (mMoveVelocity.x < -mPlayer.MaxRunSpeed && mDirection == -1))
+			Debug.Log("Left");
+		}
+		if ((mMoveVelocity.x > mPlayer.MaxRunSpeed && mDirection == 1) || 
+			(mMoveVelocity.x < -mPlayer.MaxRunSpeed && mDirection == -1))
 		{
 			mMoveVelocity.x = mPlayer.MaxRunSpeed * mDirection;	
 		}
@@ -197,12 +287,10 @@ public class PlayerScript : CombatantScript {
 		
 		if (mMoveVelocity.x > 0)
 		{
-			mDirection = 1;
 			scale.x *= 1;
 		}
 		else if (mMoveVelocity.x < 0)
 		{
-			mDirection = -1;
 			scale.x *= -1;
 		}
 		gameObject.transform.localScale = scale;

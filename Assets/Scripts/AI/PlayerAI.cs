@@ -121,9 +121,10 @@ public class PlayerAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickCheckAttackInputAction (Tree sender)
 	{
-		if (mPlayer.CheckAttackInput())
+		if (mPlayer.CheckAttackInput()) {
+			mPlayer.SetAttackChecked(true);
 			return BehaveResult.Success;
-		
+		}
 		return BehaveResult.Failure;
 	}
 	public BehaveResult TickCheckAttackUsableAction (Tree sender)
@@ -158,9 +159,10 @@ public class PlayerAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickCheckJumpInputAction (Tree sender)
 	{
-		if (mPlayer.CheckJumpInput())
+		if (mPlayer.CheckJumpInput()) {
+			mPlayer.SetJumpChecked(true);
 			return BehaveResult.Success;	
-		
+		}
 		return BehaveResult.Failure;
 	}
 	public BehaveResult TickCheckJumpWaitTimeAction (Tree sender)
@@ -203,9 +205,10 @@ public class PlayerAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickCheckRunInputAction(Tree sender)
 	{
-		if(mPlayer.CheckRunInput())
+		if(mPlayer.CheckRunInput()) {
+			mPlayer.SetRunChecked(true);
 			return BehaveResult.Success;	
-		
+		}
 		return BehaveResult.Failure;
 	}
 	/*
@@ -250,9 +253,10 @@ public class PlayerAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickCheckSkillInputAction (Tree sender)
 	{
-		if (mPlayer.CheckSkillInput())
+		if (mPlayer.CheckSkillInput()) {
+			mPlayer.SetSkillChecked(true);
 			return BehaveResult.Success;
-		
+		}
 		return BehaveResult.Failure;	
 	}
 	public BehaveResult TickCheckSkillExistsAction (Tree sender)

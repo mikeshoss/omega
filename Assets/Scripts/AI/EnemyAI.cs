@@ -168,7 +168,8 @@ public class EnemyAI : MonoBehaviour, IAgent {
 		return BehaveResult.Success;
 	}
 	public BehaveResult TickAttackAction (Tree sender)
-	{	
+	{
+		
 		mEnemy.AttackAction();
 		return BehaveResult.Success;
 	}
@@ -213,6 +214,10 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	}
 	public BehaveResult TickWanderAction (Tree sender)
 	{
+		if (mEnemy.IsDying())
+			return BehaveResult.Failure;
+		
+		
 		mEnemy.WanderAction();
 		
 		if (!mEnemy.IsWandering()) {
@@ -248,6 +253,10 @@ public class EnemyAI : MonoBehaviour, IAgent {
 	}
 	public BehaveResult TickIdleAction (Tree sender)
 	{
+		if (mEnemy.IsDying())
+		{
+			return BehaveResult.Failure;	
+		}
 		
 		if (!mEnemy.IsIdle()) {
 			return BehaveResult.Success;

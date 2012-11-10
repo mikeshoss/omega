@@ -106,7 +106,7 @@ public class EnemyScript : CombatantScript {
 	 */
 	public bool IsAlive ()
 	{
-		return !mIsDead;	
+		return mHealth > 0;	
 	}
 	
 	/*
