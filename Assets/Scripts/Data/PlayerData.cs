@@ -30,6 +30,7 @@ public class PlayerData {
 	private const float kJumpWaitTime = 0.4f; // 0.4 seconds
 	private const float kJumpVelocity = 2100.0f; // initial jump velocity
 	//Run
+	private const float kAirRunAccel = 20000.0f;
 	private const float kRunAccel = 50000.0f;
 	private const float kMaxRunSpeed = 800.0f;
 	//Health
@@ -139,6 +140,14 @@ public class PlayerData {
 		get
 		{
 			return kJumpVelocity;	
+		}
+	}
+	
+	public float AirRunAcceleration
+	{
+		get
+		{
+			return kAirRunAccel;	
 		}
 	}
 	

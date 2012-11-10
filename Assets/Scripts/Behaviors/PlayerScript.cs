@@ -42,8 +42,8 @@ public class PlayerScript : CombatantScript {
 		mAttackChecked =	true;
 		mRunChecked = 		true;
 		mSkillChecked = 	true;
-		Skill fireball = 	new Skill(0, "Fireball", "Description", 40.0f, this, 0.3f, 0.5f, 0.3f, 3.0f, 0.7f, "Fireball");
-		Skill icepick = 	new Skill(1, "Icepick", "D", 30.0f, this, 0.3f, 0.5f, 0.3f, 3.0f, 0.7f, "Icepick");
+		Skill fireball = 	new Skill(0, "Fireball", "Description", 40.0f, this, 1.0f, 0.5f, 0.3f, 3.0f, 0.7f, "Fireball");
+		Skill icepick = 	new Skill(1, "Icepick", "D", 30.0f, this, 1.0f, 0.5f, 0.3f, 3.0f, 0.7f, "Icepick");
 		mLearnedSkills.Add(fireball);
 		mLearnedSkills.Add (icepick);
 		mSelectedSkills.Add(fireball);
@@ -268,12 +268,22 @@ public class PlayerScript : CombatantScript {
 	
 	public void RunAction ()
 	{
+		float accel = 0;
+		
+		if (mIsAirborne)
+		{
+			accel = mPlayer.AirRunAcceleration;	
+		} else
+		{
+			accel = mPlayer.RunAcceleration;	
+		}
+		
 		if (mDirection == 1) {
-			mMoveVelocity.x += mPlayer.RunAcceleration * Time.deltaTime;
+			mMoveVelocity.x += accel * Time.deltaTime;
 			Debug.Log("Right");
 		}
 		else if (mDirection == -1) {
-			mMoveVelocity.x -= mPlayer.RunAcceleration * Time.deltaTime;
+			mMoveVelocity.x -= accel * Time.deltaTime;
 			Debug.Log("Left");
 		}
 		if ((mMoveVelocity.x > mPlayer.MaxRunSpeed && mDirection == 1) || 
@@ -356,8 +366,8 @@ public class PlayerScript : CombatantScript {
 
 		Vector3 pos = transform.position;
 
-		pos.y -= (height / 2.0f) * transform.localScale.y - 5;
-		pos.x -= mCharacter.radius / 5.0f;
+		pos.y -= (height / 2.0f) * transform.localScale.y - 25;
+		pos.x -= mCharacter.radius / 2.0f;
 
 		RaycastHit hit2;
 

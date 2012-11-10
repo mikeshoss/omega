@@ -45,7 +45,7 @@ public class EnemyScript : CombatantScript {
 			mNextNode = 0;
 		}
 		
-		Skill icepick = new Skill(1, "Icepick", "Description", 20.0f, this, 0.6f, 0.5f, 0.3f, 3.0f, 1.0f, "Icepick");
+		Skill icepick = new Skill(1, "Icepick", "Description", 20.0f, this, 1.5f, 0.5f, 0.3f, 3.0f, 1.0f, "Icepick");
 		mSelectedSkills.Add(icepick);
 		gameObject.AddComponent("EnemyAI");
 	}
@@ -88,6 +88,7 @@ public class EnemyScript : CombatantScript {
 	{
 		// set die animation
 		// start coroutine die
+		mSprite.spanim.Play("dance_back");
 		StartCoroutine("CoroutineDieTime");
 	}
 	IEnumerator CoroutineDieTime ()
@@ -228,7 +229,7 @@ public class EnemyScript : CombatantScript {
 	public void WanderAction ()
 	{
 		mIsWandering = true;
-		if (Mathf.Abs(Vector3.Distance(transform.position, mPath[mNextNode].transform.position)) < kMinNodeDistance)
+		if (Mathf.Abs(Vector2.Distance(new Vector2(transform.position.x, transform.position.y), new Vector2(mPath[mNextNode].transform.position.x, mPath[mNextNode].transform.position.y))) < kMinNodeDistance)
 		{
 			mIsWandering = false;
 			if (++mNextNode >= mPath.Count) {
