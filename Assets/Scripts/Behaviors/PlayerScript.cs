@@ -20,6 +20,8 @@ public class PlayerScript : CombatantScript {
 	private bool mRunChecked;
 	private bool mSkillChecked;
 	
+	public AudioClip mJumpSound;
+	
 	// Use this for initialization
 	void Start ()
 	{
@@ -50,6 +52,8 @@ public class PlayerScript : CombatantScript {
 		mSelectedSkills.Add (icepick);
 
 		gameObject.AddComponent("PlayerAI");
+		
+		
 	}
 	
 	void Update ()
@@ -242,6 +246,7 @@ public class PlayerScript : CombatantScript {
 	public void AnimateJump ()
 	{
 		mSprite.spanim.Play ("ninja_jump", 0);
+		AudioSource.PlayClipAtPoint(mJumpSound, transform.position, 0.5f);
 	}
 	
 	public void JumpAction ()
@@ -356,21 +361,21 @@ public class PlayerScript : CombatantScript {
 
 		Vector3 pos = transform.position;
 
-		pos.y -= (height / 2.0f) * transform.localScale.y - 5;
-		pos.x -= mCharacter.radius / 5.0f;
+		pos.y -= (height / 2.0f) * transform.localScale.y - 1;
+		pos.x -= mCharacter.radius / 2.0f;
 
 		RaycastHit hit2;
 
 		Vector3 pos2 = transform.position;
 
-		pos2.y -= (height / 2.0f) * transform.localScale.y - 5;
-		pos2.x += mCharacter.radius/ 5.0f;
+		pos2.y -= (height / 2.0f) * transform.localScale.y - 25;
+		pos2.x += mCharacter.radius/ 2.0f;
 
-        mIsAirborne = (!Physics.Raycast(pos, down, out hit, mMoveVelocity.y * Time.deltaTime + 10) && 
-					!Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 10));
+        mIsAirborne = (!Physics.Raycast(pos, down, out hit, mMoveVelocity.y * Time.deltaTime + 30) && 
+					!Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 30));
 		
 		Vector3 debugVector = mMoveVelocity;
-		debugVector.y = debugVector.y * Time.deltaTime + 10;
+		debugVector.y = debugVector.y * Time.deltaTime + 30;
 		
 		Debug.DrawRay(pos, debugVector * Time.deltaTime, Color.red);
 		Debug.DrawRay(pos2, debugVector * Time.deltaTime, Color.red);
