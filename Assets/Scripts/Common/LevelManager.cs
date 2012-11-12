@@ -3,6 +3,8 @@ using System.Collections;
 
 public class LevelManager : MonoBehaviour {
 
+	public Texture mTexture;
+	
 	// Use this for initialization
 	void Start () {
 		GameObject[] nodes = GameObject.FindGameObjectsWithTag("Node");
@@ -12,6 +14,9 @@ public class LevelManager : MonoBehaviour {
 			go.active = false;	
 		}
 	}
+	
+	
+	
 	
 	// Update is called once per frame
 	void Update () {
