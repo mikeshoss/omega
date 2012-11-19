@@ -9,7 +9,8 @@ public enum CombatantType
 }
 
 public class CombatantScript : MonoBehaviour {
-
+	
+	
 	protected CharacterController 	mCharacter;
 	protected exSprite				mSprite;
 	protected List<Skill>			mSelectedSkills;

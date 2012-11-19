@@ -8,6 +8,9 @@ public class EnemyScript : CombatantScript {
 	private EnemyData mEnemy;
 	public List<GameObject> mPath;
 	
+	public GameObject mHealthBar;
+	public GameObject mHealthBarParent;
+	
 	private float mXViewRange;
 	private float mYViewRange; 
 	
@@ -54,13 +57,38 @@ public class EnemyScript : CombatantScript {
 	
 	}
 	
+	void OnGUI ()
+	{
+		
+	}
+	
 	void FixedUpdate () {
 		if (!mIsDead)
 		{
+			UpdateGUI();
 			CheckGrounded ();
 			ApplyGravity ();
 			CheckHostile ();
 			Move ();
+		}
+	}
+	
+	void UpdateGUI ()
+	{
+		if (mHealthBar != null && mHealthBarParent != null)
+		{
+			Vector3 p = transform.position;
+			p.y += mCharacter.height + mCharacter.radius * 4;
+			
+			mHealthBarParent.transform.position = p;
+			
+			Vector3 v = mHealthBar.transform.localScale;
+			v.x = 1 * (mHealth / mEnemy.MaxHealth);
+			if (v.x < 0)
+			{
+				v.x = 0;	
+			}
+			mHealthBar.transform.localScale = v;
 		}
 	}
 	
@@ -73,7 +101,8 @@ public class EnemyScript : CombatantScript {
 	}
 	public void DeadAction ()
 	{
-		//do nothing	
+		//do nothing
+		Destroy(mHealthBarParent);
 		Destroy(gameObject);
 	}
 	

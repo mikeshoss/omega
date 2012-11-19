@@ -21,8 +21,16 @@ public class PlayerScript : CombatantScript {
 	private bool mSkillChecked;
 	
 	public AudioClip mJumpSound;
-	
 	// Use this for initialization
+	
+	public float MaxHealth
+	{
+		get
+		{				
+			return mPlayer.MaxHealth;	
+		}
+	}
+	
 	void Start ()
 	{
 		mCharacter = 		GetComponent<CharacterController>();
@@ -137,12 +145,22 @@ public class PlayerScript : CombatantScript {
 	
 	void FixedUpdate ()
 	{
+		HealthRegen();
 		CheckGrounded();
 		ApplyGravity();
 		ApplyFriction();
 		Move ();
 	}
 	
+	void HealthRegen ()
+	{
+		float recovery = 2 * Time.deltaTime;
+		mHealth += recovery;
+		if (mHealth > MaxHealth)
+		{
+			mHealth = MaxHealth;	
+		}
+	}
 	
 	/*
 	 * Attack Branch
