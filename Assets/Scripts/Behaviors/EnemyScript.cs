@@ -118,6 +118,13 @@ public class EnemyScript : CombatantScript {
 		// set die animation
 		// start coroutine die
 		mSprite.spanim.Play("dance_back");
+		GameObject go = (GameObject)Instantiate(Resources.Load("Pickup"));
+		go.transform.position = transform.position;
+		
+		PickupScript ps = (PickupScript)go.GetComponent<PickupScript>();
+		
+		ps.SetSkill(mSelectedSkills[0]);
+		
 		StartCoroutine("CoroutineDieTime");
 	}
 	IEnumerator CoroutineDieTime ()
@@ -128,7 +135,7 @@ public class EnemyScript : CombatantScript {
 	}
 	public void DieAction ()
 	{
-		// some sort of dying action	
+		// some sort of dying action
 	}
 
 	/*

@@ -24,10 +24,7 @@ public class IcepickScript : SkillScript {
 	public override void End ()
 	{
 		mTarget.ApplyDamage(mSkill.Magnitude);
-		Debug.Log ("Health of target: " + mTarget.Health);
-		Debug.Log ("yello" + mTarget.Health);
 		new WaitForSeconds(mSkill.EndTime);
-		Debug.Log ("hello" + mTarget.Health);
 		Destroy(gameObject);
 	}
 }

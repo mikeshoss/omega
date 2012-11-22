@@ -4,7 +4,7 @@ using System.Collections;
 public class LevelManager : MonoBehaviour {
 
 	public Texture mTexture;
-	
+	private static bool mIsPaused = false;
 	// Use this for initialization
 	void Start () {
 		GameObject[] nodes = GameObject.FindGameObjectsWithTag("Node");
@@ -15,11 +15,18 @@ public class LevelManager : MonoBehaviour {
 		}
 	}
 	
-	
-	
-	
 	// Update is called once per frame
 	void Update () {
 	
+	}
+	
+	public static bool IsPaused()
+	{
+		return mIsPaused;	
+	}
+	
+	public static void SetPaused(bool val)
+	{
+		mIsPaused = val;	
 	}
 }

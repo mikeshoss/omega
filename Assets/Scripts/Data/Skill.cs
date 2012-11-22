@@ -28,6 +28,8 @@ public class Skill {
 	
 	private string 	mName;
 	private string 	mDesc;
+	private int		mLevel;
+	private float 	mBaseMagnitude;
 	private float 	mMagnitude; // used to evaluate the strength of a skill
 
 	private float 	mOriginDelay;
@@ -57,6 +59,14 @@ public class Skill {
 		}
 	}
 
+	public int Level
+	{
+		get
+		{
+			return mLevel;	
+		}
+	}
+	
 	public float Magnitude
 	{
 		get
@@ -127,7 +137,9 @@ public class Skill {
 		mId = id;
 		mName = name;
 		mDesc = desc;
-		mMagnitude = magnitude;
+		mLevel = 1;
+		mBaseMagnitude = magnitude;
+		mMagnitude = mBaseMagnitude;
 		origin = mOrigin;
 		mOriginDelay = originDelay;
 		mTargetRecoveryTime = targetRecoveryTime;
@@ -137,6 +149,10 @@ public class Skill {
 		mResource = resource;
 	}
 
-	
+	public void LevelUp ()
+	{
+		mLevel++;
+		mMagnitude = mBaseMagnitude * (1 + (mLevel / 10.0f));
+	}
 }//end class
 

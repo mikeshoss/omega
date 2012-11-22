@@ -48,6 +48,10 @@ public class PlayerAI : MonoBehaviour, IAgent {
 	 */
 	public BehaveResult TickGameRunningDecorator (Tree sender)
 	{
+		if (Time.timeScale == 0)
+		{
+			return BehaveResult.Failure;	
+		}
 		return BehaveResult.Success;	
 	}
 	/*

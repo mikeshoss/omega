@@ -18,7 +18,8 @@ public class CombatantScript : MonoBehaviour {
 	protected CombatantType			mCombatantType;
 	
 	protected Vector3				mMoveVelocity;
-	
+	protected Vector3				mPrevVelocity;
+
 	protected float 				mHealth;
 	protected float 				mEnergy; 
 	
@@ -68,6 +69,14 @@ public class CombatantScript : MonoBehaviour {
 		get
 		{
 			return mMoveVelocity;
+		}
+	}
+	
+	public Vector3 PrevVelocity
+	{
+		get
+		{
+			return mPrevVelocity;
 		}
 	}
 

@@ -27,17 +27,17 @@ public class HUDScript : MonoBehaviour {
 	
 	void OnGUI ()
 	{
-		ResizeGUI(mActionBarFrame, mActionBarInitialRect);
-		Rect r = mHealthBarRect;
-		r.width *= (mPlayer.Health / mPlayer.MaxHealth);
-		if (r.width < 0)
-		{
-			r.width = 0;	
-		}
-		ResizeGUI(mHealthBar, r);
-		ResizeGUI(mHealthBarFrame, mHealthBarFrameRect);
-		ResizeGUI(mEnergyBar, mEnergyBarRect);
-		ResizeGUI(mEnergyBarFrame, mEnergyBarFrameRect);
+			ResizeGUI(mActionBarFrame, mActionBarInitialRect);
+			Rect r = mHealthBarRect;
+			r.width *= (mPlayer.Health / mPlayer.MaxHealth);
+			if (r.width < 0)
+			{
+				r.width = 0;	
+			}
+			ResizeGUI(mHealthBar, r);
+			ResizeGUI(mHealthBarFrame, mHealthBarFrameRect);
+			ResizeGUI(mEnergyBar, mEnergyBarRect);
+			ResizeGUI(mEnergyBarFrame, mEnergyBarFrameRect);
 	}
 
 	

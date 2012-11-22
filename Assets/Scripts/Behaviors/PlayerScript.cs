@@ -23,6 +23,14 @@ public class PlayerScript : CombatantScript {
 	public AudioClip mJumpSound;
 	// Use this for initialization
 	
+	public PlayerData Player
+	{
+		get
+		{
+			return mPlayer;	
+		}
+	}
+	
 	public float MaxHealth
 	{
 		get
@@ -66,79 +74,78 @@ public class PlayerScript : CombatantScript {
 	
 	void Update ()
 	{
-		
-		if (Input.GetKeyDown(KeyCode.W) && mJumpChecked)
+		if (Time.timeScale != 0)
 		{
-			mJumpPressed = true;
-			mJumpChecked = false;
-		} else if (mJumpChecked)
-		{
-			mJumpPressed = Input.GetKeyDown(KeyCode.W);	
-		}
-		
-		
-		if (Input.GetKeyDown(KeyCode.Space) && mAttackChecked)
-		{
-			mAttackPressed = true;
-			mAttackChecked = false;
-		} else if (mAttackChecked)
-		{
-			mAttackPressed = Input.GetKeyDown(KeyCode.Space);
-		}
-		
-		if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.A)) && mRunChecked)
-		{
-			if (Input.GetKey(KeyCode.D))
-				mDirection = 1;
-			else if (Input.GetKey(KeyCode.A))
-				mDirection = -1;
-			
-			mRunPressed = true;
-			mRunChecked = false;
-		} else if (mRunChecked)
-		{
-			if(mRunPressed = Input.GetKey(KeyCode.D))
+			if (Input.GetKeyDown(KeyCode.W) && mJumpChecked)
 			{
-				mDirection = 1;
-				Debug.Log ("right pressed");
-			}
-			else if (mRunPressed = Input.GetKey(KeyCode.A))
+				mJumpPressed = true;
+				mJumpChecked = false;
+			} else if (mJumpChecked)
 			{
-				mDirection = -1;
-				Debug.Log("Left pressed");
+				mJumpPressed = Input.GetKeyDown(KeyCode.W);	
+			}
+			
+			
+			if (Input.GetKeyDown(KeyCode.Space) && mAttackChecked)
+			{
+				mAttackPressed = true;
+				mAttackChecked = false;
+			} else if (mAttackChecked)
+			{
+				mAttackPressed = Input.GetKeyDown(KeyCode.Space);
+			}
+			
+			if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.A)) && mRunChecked)
+			{
+				if (Input.GetKey(KeyCode.D))
+					mDirection = 1;
+				else if (Input.GetKey(KeyCode.A))
+					mDirection = -1;
+				
+				mRunPressed = true;
+				mRunChecked = false;
+			} else if (mRunChecked)
+			{
+				if(mRunPressed = Input.GetKey(KeyCode.D))
+				{
+					mDirection = 1;
+				}
+				else if (mRunPressed = Input.GetKey(KeyCode.A))
+				{
+					mDirection = -1;
+				}
+			}
+			
+			if ((Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1)) && mSkillChecked)
+			{
+				if (Input.GetKey(KeyCode.Alpha1))
+					mRequestedSkill = 0;
+				else if (Input.GetKey(KeyCode.Alpha2))
+					mRequestedSkill = 1;
+				else if (Input.GetKey(KeyCode.Alpha3))
+					mRequestedSkill = 2;
+				else if (Input.GetKey(KeyCode.Alpha4))
+					mRequestedSkill = 3;
+				
+				mSkillPressed = true;
+				mSkillChecked = false;
+			} else if (mSkillChecked)
+			{
+				if (mSkillPressed = Input.GetKey(KeyCode.Alpha1))
+					mRequestedSkill = 0;
+				else if (mSkillPressed = Input.GetKey(KeyCode.Alpha2))
+					mRequestedSkill = 1;
+				else if (mSkillPressed = Input.GetKey(KeyCode.Alpha3))
+					mRequestedSkill = 2;
+				else if (mSkillPressed = Input.GetKey(KeyCode.Alpha4))
+					mRequestedSkill = 3;
 			}
 		}
-		
-		if ((Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1)) && mSkillChecked)
-		{
-			if (Input.GetKey(KeyCode.Alpha1))
-				mRequestedSkill = 0;
-			else if (Input.GetKey(KeyCode.Alpha2))
-				mRequestedSkill = 1;
-			else if (Input.GetKey(KeyCode.Alpha3))
-				mRequestedSkill = 2;
-			else if (Input.GetKey(KeyCode.Alpha4))
-				mRequestedSkill = 3;
-			
-			mSkillPressed = true;
-			mSkillChecked = false;
-		} else if (mSkillChecked)
-		{
-			if (mSkillPressed = Input.GetKey(KeyCode.Alpha1))
-				mRequestedSkill = 0;
-			else if (mSkillPressed = Input.GetKey(KeyCode.Alpha2))
-				mRequestedSkill = 1;
-			else if (mSkillPressed = Input.GetKey(KeyCode.Alpha3))
-				mRequestedSkill = 2;
-			else if (mSkillPressed = Input.GetKey(KeyCode.Alpha4))
-				mRequestedSkill = 3;
-		}
-		
-		if (Input.GetKeyDown(KeyCode.Return) && Time.timeScale != 0)
+		if (Input.GetKeyDown(KeyCode.Return) && Time.timeScale != 0) {
 			Time.timeScale = 0;
-		else if (Input.GetKeyDown(KeyCode.Return) && Time.timeScale == 0)
+		} else if (Input.GetKeyDown(KeyCode.Return) && Time.timeScale == 0) {
 			Time.timeScale = 1;
-		
+		}
 		
 		
 	}
@@ -150,6 +157,12 @@ public class PlayerScript : CombatantScript {
 		ApplyGravity();
 		ApplyFriction();
 		Move ();
+		UpdateVelocity ();
+	}
+	
+	void UpdateVelocity ()
+	{
+		mPrevVelocity = mMoveVelocity;	
 	}
 	
 	void HealthRegen ()
@@ -183,8 +196,6 @@ public class PlayerScript : CombatantScript {
 	public void ActiveSkill () 
 	{
 		mCurrentSkill = mRequestedSkill;
-		// do whatever to the action bar
-		// ActionBar.HighlighSkill(mCurrentSkill);
 	}
 	
 	public bool CheckSkillExists ()
@@ -303,11 +314,9 @@ public class PlayerScript : CombatantScript {
 		
 		if (mDirection == 1) {
 			mMoveVelocity.x += accel * Time.deltaTime;
-			Debug.Log("Right");
 		}
 		else if (mDirection == -1) {
 			mMoveVelocity.x -= accel * Time.deltaTime;
-			Debug.Log("Left");
 		}
 		if ((mMoveVelocity.x > mPlayer.MaxRunSpeed && mDirection == 1) || 
 			(mMoveVelocity.x < -mPlayer.MaxRunSpeed && mDirection == -1))
@@ -451,8 +460,44 @@ public class PlayerScript : CombatantScript {
 				}
 			} else
 			{
-				Debug.Log ("Something went wrong");	
 			}
+		} else if (other.tag == "Pickup")
+		{
+			PickupScript ps = (PickupScript)other.gameObject.GetComponent<PickupScript>();
+			
+			if (ps != null)
+			{
+				Skill s = ps.GetSkill();
+				int foundIndex = -1;
+				
+				for(int i = 0; i < mLearnedSkills.Count; i++)
+				{
+					if (s.Name == mLearnedSkills[i].Name)
+					{
+						foundIndex = i;
+						break;
+					}
+				}
+				
+				if (foundIndex >= 0)
+				{
+					mLearnedSkills[foundIndex].LevelUp();
+					Debug.Log ("leveled up " + mSelectedSkills[1].Level);
+				} else {
+					mLearnedSkills.Add(s);
+					
+					for (int i = 0; i < 4; i++)
+					{
+						if (mSelectedSkills[i] == null)
+						{
+							mSelectedSkills[i] = s;
+							break;
+						}
+					}
+				}
+			}
+			
+			Destroy (other.gameObject);
 		}
 	}
 }
