@@ -8,6 +8,11 @@ public class HUDScript : MonoBehaviour {
 	public GUITexture   mHealthBarFrame;
 	public GUITexture   mEnergyBarFrame;
 	public GUITexture   mActionBarFrame;
+	public GUITexture	mSkill1;
+	public GUITexture	mSkill2;
+	public GUITexture	mSkill3;
+	public GUITexture	mSkill4;
+	
 	public PlayerScript mPlayer;
 	
 	private Rect	mActionBarInitialRect;
@@ -15,6 +20,11 @@ public class HUDScript : MonoBehaviour {
 	private Rect	mEnergyBarRect;
 	private Rect	mHealthBarFrameRect;
 	private Rect	mEnergyBarFrameRect;
+	private Rect	mSkillRect1;
+	private Rect	mSkillRect2;
+	private Rect	mSkillRect3;
+	private Rect	mSkillRect4;
+	
 	// Use this for initialization
 	void Start () {
 		mActionBarInitialRect = mActionBarFrame.pixelInset;
@@ -22,6 +32,10 @@ public class HUDScript : MonoBehaviour {
 		mHealthBarFrameRect = mHealthBarFrame.pixelInset;
 		mEnergyBarRect = mEnergyBar.pixelInset;
 		mEnergyBarFrameRect = mEnergyBarFrame.pixelInset;
+		mSkillRect1 = mSkill1.pixelInset;
+		mSkillRect2 = mSkill2.pixelInset;
+		mSkillRect3 = mSkill3.pixelInset;
+		mSkillRect4 = mSkill4.pixelInset;
 		
 	}
 	
@@ -36,8 +50,19 @@ public class HUDScript : MonoBehaviour {
 			}
 			ResizeGUI(mHealthBar, r);
 			ResizeGUI(mHealthBarFrame, mHealthBarFrameRect);
-			ResizeGUI(mEnergyBar, mEnergyBarRect);
+		
+			r = mEnergyBarRect;
+			r.width *= (mPlayer.Energy / mPlayer.Player.MaxEnergy);
+			if (r.width < 0)
+			{
+				r.width = 0;	
+			}
+			ResizeGUI(mEnergyBar, r);
 			ResizeGUI(mEnergyBarFrame, mEnergyBarFrameRect);
+			ResizeGUI(mSkill1, mSkillRect1);
+			ResizeGUI(mSkill2, mSkillRect2);
+			ResizeGUI(mSkill3, mSkillRect3);
+			ResizeGUI(mSkill4, mSkillRect4);
 	}
 
 	

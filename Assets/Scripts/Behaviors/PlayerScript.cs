@@ -66,7 +66,12 @@ public class PlayerScript : CombatantScript {
 		mLearnedSkills.Add (icepick);
 		mSelectedSkills.Add(fireball);
 		mSelectedSkills.Add (icepick);
-
+		
+		GUITexture guit = (GUITexture)GameObject.FindGameObjectWithTag("SkillSetIcon1").GetComponent<GUITexture>();
+		guit.texture = (Texture)Resources.Load("skill-fireball");
+		
+		guit = (GUITexture)GameObject.FindGameObjectWithTag("SkillSetIcon2").GetComponent<GUITexture>();
+		guit.texture = (Texture)Resources.Load("skill-icepick");
 		gameObject.AddComponent("PlayerAI");
 		
 		
@@ -153,6 +158,7 @@ public class PlayerScript : CombatantScript {
 	void FixedUpdate ()
 	{
 		HealthRegen();
+		EnergyRegen();
 		CheckGrounded();
 		ApplyGravity();
 		ApplyFriction();
@@ -174,6 +180,18 @@ public class PlayerScript : CombatantScript {
 			mHealth = MaxHealth;	
 		}
 	}
+	
+	void EnergyRegen ()
+	{
+		float recovery = 4 * Time.deltaTime;
+		mEnergy += recovery;
+		if (mEnergy > mPlayer.MaxEnergy)
+		{
+			mEnergy = mPlayer.MaxEnergy;	
+		}
+	}
+	
+	
 	
 	/*
 	 * Attack Branch
@@ -205,6 +223,9 @@ public class PlayerScript : CombatantScript {
 	
 	public void AnimateAttack ()
 	{
+		if (mEnergy < 20)
+			return;
+		mEnergy -= 10;
 		StartCoroutine("CoroutineAttack");
 	}
 	
@@ -225,7 +246,6 @@ public class PlayerScript : CombatantScript {
 		
 		MeshRenderer mr = (MeshRenderer)go.GetComponent<MeshRenderer>();
 		mr.enabled = false;
-		
 		yield return new WaitForSeconds(delay);
 		mIsSkillCooling[mCurrentSkill] = false;
 	}
