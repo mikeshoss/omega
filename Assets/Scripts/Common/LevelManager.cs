@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class LevelManager : MonoBehaviour {
-
+	
 	private static bool mIsPaused = false;
 	// Use this for initialization
 	void Start () {

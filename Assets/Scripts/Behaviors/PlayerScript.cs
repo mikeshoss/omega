@@ -408,6 +408,11 @@ public class PlayerScript : CombatantScript {
 	public void Move ()
 	{
 		mCharacter.Move(mMoveVelocity * Time.deltaTime);
+		
+		if (mHealth <= 0) {
+			mHealth = MaxHealth;
+			transform.position = new Vector3(0,0,0);
+		}
 	}
 	
 	private void CheckGrounded ()
@@ -478,8 +483,6 @@ public class PlayerScript : CombatantScript {
 					ss.Target = this;
 					ss.ShouldEnd();
 				}
-			} else
-			{
 			}
 		} else if (other.tag == "Pickup")
 		{
@@ -518,6 +521,9 @@ public class PlayerScript : CombatantScript {
 			}
 			
 			Destroy (other.gameObject);
+		} else if (other.tag == "Respawn")
+		{
+			transform.position = new Vector3(0,0,0);
 		}
 	}
 }

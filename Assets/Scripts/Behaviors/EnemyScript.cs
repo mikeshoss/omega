@@ -330,15 +330,16 @@ public class EnemyScript : CombatantScript {
 
 		pos2.y -= (height / 2.0f) * transform.localScale.y - 5;
 		pos2.x += mCharacter.radius/ 5.0f;
-
+		
+		if (!mIsAirborne)
         mIsAirborne = (	!Physics.Raycast(pos, down, out hit, mMoveVelocity.y * Time.deltaTime + 10) && 
 						!Physics.Raycast(pos2, down, out hit2, mMoveVelocity.y * Time.deltaTime + 10));
 		
 		Vector3 debugVector = mMoveVelocity;
 		debugVector.y = debugVector.y * Time.deltaTime + 10;
 		
-		Debug.DrawRay(pos, debugVector * Time.deltaTime, Color.red);
-		Debug.DrawRay(pos2, debugVector * Time.deltaTime, Color.red);
+		//Debug.DrawRay(pos, debugVector * Time.deltaTime, Color.red);
+		//Debug.DrawRay(pos2, debugVector * Time.deltaTime, Color.red);
 	}
 	
 	public void OnControllerColliderHit (ControllerColliderHit hit)
