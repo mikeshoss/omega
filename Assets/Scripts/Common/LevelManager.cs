@@ -3,7 +3,6 @@ using System.Collections;
 
 public class LevelManager : MonoBehaviour {
 
-	public Texture mTexture;
 	private static bool mIsPaused = false;
 	// Use this for initialization
 	void Start () {

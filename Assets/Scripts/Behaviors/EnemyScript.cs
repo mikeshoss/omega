@@ -21,7 +21,7 @@ public class EnemyScript : CombatantScript {
 	private bool mIsWandering;
 	private bool mIsIdle;
 	
-	private const float kMinNodeDistance = 	100.0f;
+	private const float kMinNodeDistance = 	200.0f;
 	private const float kNodeWaitTime = 	0.2f;
 	
 	void Start () {
@@ -265,7 +265,8 @@ public class EnemyScript : CombatantScript {
 	public void WanderAction ()
 	{
 		mIsWandering = true;
-		if (Mathf.Abs(Vector2.Distance(new Vector2(transform.position.x, transform.position.y), new Vector2(mPath[mNextNode].transform.position.x, mPath[mNextNode].transform.position.y))) < kMinNodeDistance)
+		if (Mathf.Abs(Vector2.Distance(new Vector2(transform.position.x, transform.position.y), 
+						new Vector2(mPath[mNextNode].transform.position.x, mPath[mNextNode].transform.position.y))) < kMinNodeDistance)
 		{
 			mIsWandering = false;
 			if (++mNextNode >= mPath.Count) {
