@@ -29,6 +29,8 @@ public class CombatantScript : MonoBehaviour {
 	protected bool			 		mIsAirborne;
 	protected bool[]				mIsSkillCooling = new bool[4];
 	
+	public bool locked = 			false;
+	
 	protected const float kGravity = 5000.0f;
 	protected const float kFriction = 4000.0f;
 

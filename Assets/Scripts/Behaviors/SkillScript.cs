@@ -9,10 +9,12 @@ public abstract class SkillScript : MonoBehaviour {
 	protected CombatantScript 	mOrigin;
 	protected CombatantScript	mTarget;
 	protected bool				mIsActive;
+	protected bool				mIsStartup;
 	void Start ()
 	{
 		mSprite = (exSprite)GetComponent<exSprite>();
 		mIsActive = false;
+		mIsStartup = false;
 		mAI = (SkillAI)gameObject.AddComponent("SkillAI");
 	}
 	

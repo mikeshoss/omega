@@ -20,6 +20,7 @@ public class PlayerScript : CombatantScript {
 	private bool mRunChecked;
 	private bool mSkillChecked;
 	
+	
 	public AudioClip mJumpSound;
 	// Use this for initialization
 	
@@ -60,8 +61,9 @@ public class PlayerScript : CombatantScript {
 		mAttackChecked =	true;
 		mRunChecked = 		true;
 		mSkillChecked = 	true;
-		Skill fireball = 	new Skill(0, "Fireball", "Description", 40.0f, this, 1.0f, 0.5f, 0.3f, 3.0f, 0.7f, "Fireball");
-		Skill icepick = 	new Skill(1, "Icepick", "D", 30.0f, this, 1.0f, 0.5f, 0.3f, 3.0f, 0.7f, "Icepick");
+		locked = 			false;
+		Skill fireball = 	new Skill(0, "Fireball", "Description", 40.0f, this, 1.0f, 0.5f, 0.2f, 3.0f, 0.7f, "Fireball");
+		Skill icepick = 	new Skill(1, "Icepick", "D", 30.0f, this, 1.0f, 0.5f, 0.2f, 3.0f, 0.7f, "Icepick");
 		mLearnedSkills.Add(fireball);
 		mLearnedSkills.Add (icepick);
 		mSelectedSkills.Add(fireball);
@@ -79,77 +81,86 @@ public class PlayerScript : CombatantScript {
 	
 	void Update ()
 	{
-		if (Time.timeScale != 0)
+		Debug.Log (locked);
+		if (!locked)
 		{
-			if (Input.GetKeyDown(KeyCode.W) && mJumpChecked)
+			if (Time.timeScale != 0)
 			{
-				mJumpPressed = true;
-				mJumpChecked = false;
-			} else if (mJumpChecked)
-			{
-				mJumpPressed = Input.GetKeyDown(KeyCode.W);	
-			}
-			
-			
-			if (Input.GetKeyDown(KeyCode.Space) && mAttackChecked)
-			{
-				mAttackPressed = true;
-				mAttackChecked = false;
-			} else if (mAttackChecked)
-			{
-				mAttackPressed = Input.GetKeyDown(KeyCode.Space);
-			}
-			
-			if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.A)) && mRunChecked)
-			{
-				if (Input.GetKey(KeyCode.D))
-					mDirection = 1;
-				else if (Input.GetKey(KeyCode.A))
-					mDirection = -1;
-				
-				mRunPressed = true;
-				mRunChecked = false;
-			} else if (mRunChecked)
-			{
-				if(mRunPressed = Input.GetKey(KeyCode.D))
+				if (Input.GetKeyDown(KeyCode.W) && mJumpChecked)
 				{
-					mDirection = 1;
-				}
-				else if (mRunPressed = Input.GetKey(KeyCode.A))
+					mJumpPressed = true;
+					mJumpChecked = false;
+				} else if (mJumpChecked)
 				{
-					mDirection = -1;
+					mJumpPressed = Input.GetKeyDown(KeyCode.W);	
+				}
+				
+				
+				if (Input.GetKeyDown(KeyCode.Space) && mAttackChecked)
+				{
+					mAttackPressed = true;
+					mAttackChecked = false;
+				} else if (mAttackChecked)
+				{
+					mAttackPressed = Input.GetKeyDown(KeyCode.Space);
+				}
+				
+				if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.A)) && mRunChecked)
+				{
+					if (Input.GetKey(KeyCode.D))
+						mDirection = 1;
+					else if (Input.GetKey(KeyCode.A))
+						mDirection = -1;
+					
+					mRunPressed = true;
+					mRunChecked = false;
+				} else if (mRunChecked)
+				{
+					if(mRunPressed = Input.GetKey(KeyCode.D))
+					{
+						mDirection = 1;
+					}
+					else if (mRunPressed = Input.GetKey(KeyCode.A))
+					{
+						mDirection = -1;
+					}
+				}
+				
+				if ((Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1)) && mSkillChecked)
+				{
+					if (Input.GetKey(KeyCode.Alpha1))
+						mRequestedSkill = 0;
+					else if (Input.GetKey(KeyCode.Alpha2))
+						mRequestedSkill = 1;
+					else if (Input.GetKey(KeyCode.Alpha3))
+						mRequestedSkill = 2;
+					else if (Input.GetKey(KeyCode.Alpha4))
+						mRequestedSkill = 3;
+					
+					mSkillPressed = true;
+					mSkillChecked = false;
+				} else if (mSkillChecked)
+				{
+					if (mSkillPressed = Input.GetKey(KeyCode.Alpha1))
+						mRequestedSkill = 0;
+					else if (mSkillPressed = Input.GetKey(KeyCode.Alpha2))
+						mRequestedSkill = 1;
+					else if (mSkillPressed = Input.GetKey(KeyCode.Alpha3))
+						mRequestedSkill = 2;
+					else if (mSkillPressed = Input.GetKey(KeyCode.Alpha4))
+						mRequestedSkill = 3;
 				}
 			}
-			
-			if ((Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Alpha1)) && mSkillChecked)
-			{
-				if (Input.GetKey(KeyCode.Alpha1))
-					mRequestedSkill = 0;
-				else if (Input.GetKey(KeyCode.Alpha2))
-					mRequestedSkill = 1;
-				else if (Input.GetKey(KeyCode.Alpha3))
-					mRequestedSkill = 2;
-				else if (Input.GetKey(KeyCode.Alpha4))
-					mRequestedSkill = 3;
-				
-				mSkillPressed = true;
-				mSkillChecked = false;
-			} else if (mSkillChecked)
-			{
-				if (mSkillPressed = Input.GetKey(KeyCode.Alpha1))
-					mRequestedSkill = 0;
-				else if (mSkillPressed = Input.GetKey(KeyCode.Alpha2))
-					mRequestedSkill = 1;
-				else if (mSkillPressed = Input.GetKey(KeyCode.Alpha3))
-					mRequestedSkill = 2;
-				else if (mSkillPressed = Input.GetKey(KeyCode.Alpha4))
-					mRequestedSkill = 3;
+			if (Input.GetKeyDown(KeyCode.Return) && Time.timeScale != 0) {
+				Time.timeScale = 0;
+			} else if (Input.GetKeyDown(KeyCode.Return) && Time.timeScale == 0) {
+				Time.timeScale = 1;
 			}
-		}
-		if (Input.GetKeyDown(KeyCode.Return) && Time.timeScale != 0) {
-			Time.timeScale = 0;
-		} else if (Input.GetKeyDown(KeyCode.Return) && Time.timeScale == 0) {
-			Time.timeScale = 1;
+		} else {
+			mRunChecked = true;
+			mJumpChecked = true;
+			mAttackChecked = true;
+			mSkillChecked = true;
 		}
 		
 		

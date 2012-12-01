@@ -26,7 +26,7 @@ public class SnowflakeFall : MonoBehaviour {
 		if (randomizeScale)
 		{
 			Vector3 scale = gameObject.transform.localScale;
-			scale *= Random.Range(0.3f, 1);
+			scale *= Random.Range(0.3f, 0.6f);
 			transform.localScale = scale;
 		}
 		

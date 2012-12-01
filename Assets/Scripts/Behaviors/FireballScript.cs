@@ -17,7 +17,7 @@ public class FireballScript : SkillScript {
 	
 	public override void Active ()
 	{
-		transform.Translate(new Vector3(2000, 0, 0) * Time.deltaTime * (transform.localScale.x / Mathf.Abs(transform.localScale.x)));
+		transform.Translate(new Vector3(3400, 0, 0) * Time.deltaTime * (transform.localScale.x / Mathf.Abs(transform.localScale.x)));
 	}
 	
 	public override void End ()

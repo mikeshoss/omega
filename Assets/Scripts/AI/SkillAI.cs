@@ -57,7 +57,12 @@ public class SkillAI : MonoBehaviour, IAgent {
 	public BehaveResult TickStartupAction (Tree sender)
 	{
 		mSkill.Startup();
-		return BehaveResult.Success;
+		
+		if (mSkill.IsActive())
+		{
+			return BehaveResult.Success;	
+		}
+		return BehaveResult.Running;
 	}
 	
 	public BehaveResult TickActiveAction (Tree sender)
