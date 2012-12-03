@@ -25,6 +25,9 @@ public class FireballScript : SkillScript {
 	{
 		mTarget.ApplyDamage(mSkill.Magnitude);
 		new WaitForSeconds(mSkill.EndTime);
+		GameObject go = (GameObject)Instantiate(Resources.Load ("DamageText"), transform.position, transform.localRotation);
+		DamageTextScript dts = go.GetComponent<DamageTextScript>();
+		dts.SetDamageText(mSkill.Magnitude.ToString());
 		Destroy(gameObject);
 	}
 }

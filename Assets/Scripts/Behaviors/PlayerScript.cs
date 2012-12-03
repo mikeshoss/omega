@@ -62,8 +62,13 @@ public class PlayerScript : CombatantScript {
 		mRunChecked = 		true;
 		mSkillChecked = 	true;
 		locked = 			false;
-		Skill fireball = 	new Skill(0, "Fireball", "Description", 40.0f, this, 1.0f, 0.5f, 0.2f, 3.0f, 0.7f, "Fireball");
-		Skill icepick = 	new Skill(1, "Icepick", "D", 30.0f, this, 1.0f, 0.5f, 0.2f, 3.0f, 0.7f, "Icepick");
+		Skill fireball = 	new Skill(0, "Fireball", "Description", 30.0f, this, 0.6f, 0.2f, 0.1f, 3.0f, 0.1f, "Fireball");
+		for (int i = 0; i < 4; i++)
+		{
+			fireball.LevelUp();	
+		}
+		Skill icepick = 	new Skill(1, "Icepick", "D", 20.0f, this, 0.6f, 0.1f, 0.2f, 3.0f, 0.1f, "Icepick");
+		
 		mLearnedSkills.Add(fireball);
 		mLearnedSkills.Add (icepick);
 		mSelectedSkills.Add(fireball);
@@ -234,7 +239,7 @@ public class PlayerScript : CombatantScript {
 	
 	public void AnimateAttack ()
 	{
-		if (mEnergy < 20)
+		if (mEnergy < 10)
 			return;
 		mEnergy -= 10;
 		StartCoroutine("CoroutineAttack");
@@ -473,6 +478,8 @@ public class PlayerScript : CombatantScript {
 			mMoveVelocity.y = 0;
 			mIsAirborne = false;
 			mJumpCount = 0;
+			
+			AudioSource.PlayClipAtPoint((AudioClip)Resources.Load ("snowstep2"), new Vector3(0,0,0), 0.3f);
 		}
 
 		// If player hits a wall, set x velocity to 0.
@@ -540,13 +547,21 @@ public class PlayerScript : CombatantScript {
 					}
 				}
 				
-				AudioSource.PlayClipAtPoint((AudioClip)Resources.Load ("pickupSound"), new Vector3(0,0,0), 1);
+				
 			}
 			
 			Destroy (other.gameObject);
+			AudioSource.PlayClipAtPoint((AudioClip)Resources.Load ("pickupSound"), new Vector3(0,0,0), 1);
+			mEnergy += 10;
+			mHealth += 5;
+			
+			if (mEnergy > mPlayer.MaxEnergy)
+			{
+				mEnergy = mPlayer.MaxEnergy;	
+			}
 		} else if (other.tag == "Respawn")
 		{
-			transform.position = new Vector3(0,0,0);
+			transform.position = new Vector3(350,1000,0);
 		}
 	}
 }

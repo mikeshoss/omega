@@ -203,7 +203,7 @@ public class PlayerData {
 	{
 		mLevel = level;
 		mMaxHealth = kBaseHealth + (level * kHealthIncrement);
-		mMaxEnergy = kBaseEnergy + (level * kEnergyIncrement);
+		mMaxEnergy = kBaseEnergy + (level * kEnergyIncrement) + 50;
 		mSkillsLearned = skillsLearned;
 		mSkillsSelected = skillsSelected;
 	}
