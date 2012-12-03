@@ -129,6 +129,8 @@ public class EnemyScript : CombatantScript {
 	}
 	IEnumerator CoroutineDieTime ()
 	{
+		
+		AudioSource.PlayClipAtPoint((AudioClip)Resources.Load ("enemy-die"), new Vector3(0,0,0), 3);
 		yield return new WaitForSeconds(1.0f); // Animation die time
 		mIsDead = true;
 		StopCoroutine("CoroutineDieTime");
@@ -215,6 +217,8 @@ public class EnemyScript : CombatantScript {
 		
 		MeshRenderer mr = (MeshRenderer)go.GetComponent<MeshRenderer>();
 		mr.enabled = false;
+		
+		
 		
 		yield return new WaitForSeconds(delay);
 		mIsSkillCooling[mCurrentSkill] = false;
@@ -380,6 +384,7 @@ public class EnemyScript : CombatantScript {
 			{
 				if (ss.Origin.GetCombatantType != mCombatantType)	
 				{
+					AudioSource.PlayClipAtPoint((AudioClip)Resources.Load ("enemy-hit"), new Vector3(0,0,0), 8);
 					ss.Target = this;
 					ss.ShouldEnd();
 				}

@@ -32,7 +32,7 @@ public class PlayerData {
 	//Run
 	private const float kAirRunAccel = 20000.0f;
 	private const float kRunAccel = 50000.0f;
-	private const float kMaxRunSpeed = 800.0f;
+	private const float kMaxRunSpeed = 1000.0f;
 	//Health
 	private const float kBaseHealth = 95.0f; 
 	private const float kHealthIncrement = 5.0f; // 5 percent

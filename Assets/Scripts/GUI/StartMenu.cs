@@ -41,6 +41,11 @@ public class StartMenu : MonoBehaviour {
 			{
 				Application.LoadLevel("level-01");	
 			}
+			
+			if (mSelected == 1)
+			{
+				Application.Quit();	
+			}
 		}
 		
 	}

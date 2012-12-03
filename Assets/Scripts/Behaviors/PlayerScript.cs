@@ -305,8 +305,8 @@ public class PlayerScript : CombatantScript {
 	
 	public void AnimateJump ()
 	{
-		mSprite.spanim.Play ("ninja_jump", 0);
-		AudioSource.PlayClipAtPoint(mJumpSound, transform.position, 0.5f);
+		mSprite.spanim.Play ("Jump", 0);
+		AudioSource.PlayClipAtPoint(mJumpSound, transform.position, 1);
 	}
 	
 	public void JumpAction ()
@@ -327,8 +327,16 @@ public class PlayerScript : CombatantScript {
 	
 	public void AnimateRun ()
 	{
-		if(!mSprite.spanim.IsPlaying("ninja_run"))
-			mSprite.spanim.Play("ninja_run");
+		if(!mSprite.spanim.IsPlaying("Run"))
+			mSprite.spanim.Play("Run");
+		
+		if (mSprite.index == 10)
+			AudioSource.PlayClipAtPoint((AudioClip)Resources.Load ("snowstep2"), new Vector3(0,0,0), 0.3f);
+		
+		if (mSprite.index == 13)
+			AudioSource.PlayClipAtPoint((AudioClip)Resources.Load ("snowstep2"), new Vector3(0,0,0), 0.3f);
+		
+		
 	}
 	
 	public void RunAction ()
@@ -374,8 +382,8 @@ public class PlayerScript : CombatantScript {
 	 */
 	public void AnimateIdle ()
 	{
-		if(!mSprite.spanim.IsPlaying("ninja_land"))
-			mSprite.spanim.Play("ninja_land");
+		if(!mSprite.spanim.IsPlaying("Idle"))
+			mSprite.spanim.Play("Idle");
 	}
 	
 	public void IdleAction ()
@@ -493,6 +501,8 @@ public class PlayerScript : CombatantScript {
 				{
 					ss.Target = this;
 					ss.ShouldEnd();
+					
+					AudioSource.PlayClipAtPoint((AudioClip)Resources.Load ("player-land"), new Vector3(0,0,0), 0.7f);
 				}
 			}
 		} else if (other.tag == "Pickup")
@@ -529,6 +539,8 @@ public class PlayerScript : CombatantScript {
 						}
 					}
 				}
+				
+				AudioSource.PlayClipAtPoint((AudioClip)Resources.Load ("pickupSound"), new Vector3(0,0,0), 1);
 			}
 			
 			Destroy (other.gameObject);

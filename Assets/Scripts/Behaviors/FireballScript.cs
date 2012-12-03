@@ -8,11 +8,12 @@ public class FireballScript : SkillScript {
 		new WaitForSeconds(mSkill.StartupTime);
 		transform.position = mOrigin.transform.position;
 		Vector3 scale = transform.localScale;
-		scale.x *= mOrigin.Direction;
+		scale.x = mOrigin.transform.localScale.x;
 		transform.localScale = scale;
 		MeshRenderer mr = (MeshRenderer)GetComponent<MeshRenderer>();
 		mr.enabled = true;
 		mIsActive = true;
+		AudioSource.PlayClipAtPoint((AudioClip)Resources.Load ("fire"), new Vector3(0,0,0), 0.4f);
 	}
 	
 	public override void Active ()
