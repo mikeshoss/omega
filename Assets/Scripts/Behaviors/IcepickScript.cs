@@ -7,7 +7,10 @@ public class IcepickScript : SkillScript {
 	public override void Startup ()
 	{
 		new WaitForSeconds(mSkill.StartupTime);
-		transform.position = mOrigin.transform.position;
+		Vector3 v = mOrigin.transform.position;
+		v.z = transform.position.z;
+		transform.position = v;
+		
 		Vector3 scale = transform.localScale;
 		scale.x *= (mOrigin.transform.localScale.x / Mathf.Abs(mOrigin.transform.localScale.x));
 		transform.localScale = scale;
