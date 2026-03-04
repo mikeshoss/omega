@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [master]
+    branches: [master, claude/browser-capstone-project-qV55K]
 
 jobs:
   build-and-deploy:
